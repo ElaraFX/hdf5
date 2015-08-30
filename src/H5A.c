@@ -433,13 +433,9 @@ H5Aopen(hid_t loc_id, const char *attr_name, hid_t aapl_id)
     if(H5P_verify_apl_and_dxpl(&aapl_id, H5P_CLS_AACC, &dxpl_id, loc_id, FALSE) < 0)
         HGOTO_ERROR(H5E_ATTR, H5E_CANTSET, FAIL, "can't set access and transfer property lists")
 
-    /* Read in attribute from object header */
-    if(NULL == (attr = H5O_attr_open_by_name(loc.oloc, attr_name, dxpl_id)))
-        HGOTO_ERROR(H5E_ATTR, H5E_CANTINIT, FAIL, "unable to load attribute info from object header for attribute: '%s'", attr_name)
-
-    /* Finish initializing attribute */
-    if(H5A__open_common(&loc, attr) < 0)
-        HGOTO_ERROR(H5E_ATTR, H5E_CANTINIT, FAIL, "unable to initialize attribute")
+    /* Open the attribute */
+    if(NULL == (attr = H5A_open(&loc, attr_name, dxpl_id)))
+        HGOTO_ERROR(H5E_ATTR, H5E_CANTINIT, FAIL, "unable to open attribute: '%s'", attr_name)
 
     /* Register the attribute and get an ID for it */
     if((ret_value = H5I_register(H5I_ATTR, attr, TRUE)) < 0)
