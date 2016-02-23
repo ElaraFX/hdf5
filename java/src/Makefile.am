@@ -60,6 +60,7 @@ hdf5_java_JAVA =  \
     ${pkgpath}/callbacks/H5P_cls_copy_func_cb.java \
     ${pkgpath}/callbacks/H5P_cls_copy_func_t.java \
     ${pkgpath}/callbacks/H5P_cls_create_func_cb.java \
+    ${pkgpath}/callbacks/H5P_cls_create_func_t.java \
     ${pkgpath}/callbacks/H5P_prp_close_func_cb.java \
     ${pkgpath}/callbacks/H5P_prp_compare_func_cb.java \
     ${pkgpath}/callbacks/H5P_prp_copy_func_cb.java \
