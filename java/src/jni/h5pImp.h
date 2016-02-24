@@ -1258,6 +1258,14 @@ JNIEXPORT jlong JNICALL Java_hdf_hdf5lib_H5__1H5Pcreate_1class
 JNIEXPORT void JNICALL Java_hdf_hdf5lib_H5_H5Pregister2
   (JNIEnv*, jclass, jlong, jstring, jlong, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject, jobject);
 
+/*
+ * Class:     hdf_hdf5lib_H5
+ * Method:    H5Piterate
+ * Signature: (J[ILjava/lang/Object;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_hdf_hdf5lib_H5_H5Piterate
+  (JNIEnv*, jclass, jlong, jintArray, jobject, jobject);
+
 
 #ifdef __cplusplus
 } /* end extern "C" */

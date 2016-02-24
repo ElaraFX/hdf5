@@ -16,9 +16,11 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -40,6 +42,8 @@ import hdf.hdf5lib.callbacks.H5P_prp_copy_func_cb;
 import hdf.hdf5lib.callbacks.H5P_prp_compare_func_cb;
 import hdf.hdf5lib.callbacks.H5P_prp_close_func_cb;
 import hdf.hdf5lib.callbacks.H5P_prp_create_func_cb;
+import hdf.hdf5lib.callbacks.H5P_iterate_cb;
+import hdf.hdf5lib.callbacks.H5P_iterate_t;
 import hdf.hdf5lib.exceptions.HDF5Exception;
 import hdf.hdf5lib.exceptions.HDF5LibraryException;
 import hdf.hdf5lib.structs.H5AC_cache_config_t;
@@ -76,6 +80,12 @@ public class TestH5Plist {
     private static final String PROP4_NAME  = "Property 4";
     private static final double prop4_def = 1.41F;   // Property 4 default value
     private static final int    PROP4_SIZE = 8;
+
+    private static final String [] pnames = { // Names of properties for iterator
+            PROP1_NAME,
+            PROP2_NAME,
+            PROP3_NAME,
+            PROP4_NAME};
 
     long plist_class_id = -1;
 
@@ -275,7 +285,6 @@ public class TestH5Plist {
     @Test
     public void testH5P_genprop_basic_class_prop() {
         int         status = -1;
-        long        cid1 = -1;        // Generic Property class ID
         long        size = -1;        // Generic Property size
         long        nprops = -1;      // Generic Property class number
 
@@ -506,5 +515,118 @@ public class TestH5Plist {
             fail("H5Pget_nprops plist_class_id: " + err);
         }
         assertTrue("H5Pget_nprops: "+nprops, nprops==0);
+    }
+
+    // Test basic generic property list code. Tests iterating over properties in a generic class.
+    @Test
+    public void testH5P_genprop_class_iter() {
+        class idata {
+            public String[] iter_names= null;
+            public int iter_count = -1;
+            idata(String[] names, int count) {
+                this.iter_names = names;
+                this.iter_count = count;
+            }
+        }
+        class H5P_iter_data implements H5P_iterate_t {
+            public ArrayList<idata> iterdata = new ArrayList<idata>();
+        }
+        H5P_iterate_t iter_data = new H5P_iter_data();
+
+        class H5P_iter_callback implements H5P_iterate_cb {
+            public int callback(long group, String name, H5P_iterate_t op_data) {
+                idata id = ((H5P_iter_data)op_data).iterdata.get(0);
+                return name.compareTo(id.iter_names[id.iter_count++]);
+            }
+        }
+        H5P_iterate_cb iter_cb = new H5P_iter_callback();
+
+        long        size = -1;        // Generic Property size
+        long        nprops = -1;      // Generic Property class number
+        int[]       idx = {0};        // Index to start iteration at
+
+        // Insert first property into class (with no callbacks) */
+        try {
+            byte[] prop_value = HDFNativeData.intToByte(prop1_def);
+
+            H5.H5Pregister2(plist_class_id, PROP1_NAME, PROP1_SIZE, prop_value, null, null, null, null, null, null, null);
+        }
+        catch (Throwable err) {
+            err.printStackTrace();
+            fail("H5Pregister2 plist_class_id: "+PROP1_NAME + err);
+        }
+
+        // Insert second property into class (with no callbacks) */
+        try {
+            byte[] prop_value = HDFNativeData.floatToByte(prop2_def);
+
+            H5.H5Pregister2(plist_class_id, PROP2_NAME, PROP2_SIZE, prop_value, null, null, null, null, null, null, null);
+        }
+        catch (Throwable err) {
+            err.printStackTrace();
+            fail("H5Pregister2 plist_class_id: "+PROP2_NAME + err);
+        }
+
+        // Insert third property into class (with no callbacks) */
+        try {
+            byte[] prop_value = new String(prop3_def).getBytes(StandardCharsets.UTF_8);
+
+            H5.H5Pregister2(plist_class_id, PROP3_NAME, PROP3_SIZE, prop_value, null, null, null, null, null, null, null);
+        }
+        catch (Throwable err) {
+            err.printStackTrace();
+            fail("H5Pregister2 plist_class_id: "+PROP3_NAME + err);
+        }
+
+        // Insert fourth property into class (with no callbacks) */
+        try {
+            byte[] prop_value = HDFNativeData.doubleToByte(prop4_def);
+
+            H5.H5Pregister2(plist_class_id, PROP4_NAME, PROP4_SIZE, prop_value, null, null, null, null, null, null, null);
+        }
+        catch (Throwable err) {
+            err.printStackTrace();
+            fail("H5Pregister2 plist_class_id: "+PROP4_NAME + err);
+        }
+
+        // Check the number of properties in class */
+        try {
+            nprops = H5.H5Pget_nprops(plist_class_id);
+        }
+        catch (Throwable err) {
+            err.printStackTrace();
+            fail("H5Pget_nprops plist_class_id: " + err);
+        }
+        assertTrue("H5Pget_nprops: "+nprops, nprops==4);
+
+        // Iterate over all properties in class */
+        idata id = new idata(pnames, 0);
+        ((H5P_iter_data)iter_data).iterdata.add(id);
+        try {
+            H5.H5Piterate(plist_class_id, null, iter_cb, iter_data);
+        }
+        catch (Throwable err) {
+            err.printStackTrace();
+            fail("H5.H5Piterate: " + err);
+        }
+        assertFalse("H5Piterate ",((H5P_iter_data)iter_data).iterdata.isEmpty());
+        assertTrue("H5Piterate "+((H5P_iter_data)iter_data).iterdata.size(),((H5P_iter_data)iter_data).iterdata.size()==1);
+        assertTrue("H5Piterate "+(((H5P_iter_data)iter_data).iterdata.get(0)).iter_count,((idata)((H5P_iter_data)iter_data).iterdata.get(0)).iter_count==4);
+
+        // Iterate over last three properties in class */
+        idx[0] = 1;
+        ((H5P_iter_data)iter_data).iterdata.get(0).iter_count = 1;
+        try {
+            H5.H5Piterate(plist_class_id, idx, iter_cb, iter_data);
+        }
+        catch (Throwable err) {
+            err.printStackTrace();
+            fail("H5.H5Piterate: " + err);
+        }
+        assertFalse("H5Piterate ",((H5P_iter_data)iter_data).iterdata.isEmpty());
+        assertTrue("H5Piterate "+((H5P_iter_data)iter_data).iterdata.size(),((H5P_iter_data)iter_data).iterdata.size()==1);
+        assertTrue("H5Piterate "+(((H5P_iter_data)iter_data).iterdata.get(0)).iter_count,((idata)((H5P_iter_data)iter_data).iterdata.get(0)).iter_count==4);
+
+        assertTrue("H5Piterate: "+nprops+"="+idx[0], nprops == idx[0]);
     }
 }

@@ -43,6 +43,8 @@ import hdf.hdf5lib.callbacks.H5P_prp_copy_func_cb;
 import hdf.hdf5lib.callbacks.H5P_prp_compare_func_cb;
 import hdf.hdf5lib.callbacks.H5P_prp_close_func_cb;
 import hdf.hdf5lib.callbacks.H5P_prp_create_func_cb;
+import hdf.hdf5lib.callbacks.H5P_iterate_cb;
+import hdf.hdf5lib.callbacks.H5P_iterate_t;
 import hdf.hdf5lib.exceptions.HDF5Exception;
 import hdf.hdf5lib.exceptions.HDF5JavaException;
 import hdf.hdf5lib.exceptions.HDF5LibraryException;
@@ -4596,7 +4598,7 @@ public class H5 implements java.io.Serializable {
     // public synchronized static native void H5Pinsert2(long plist, String name, long size,  byte[] value, H5P_prp_set_func_cb prp_set, H5P_prp_get_func_cb prp_get,
     //      H5P_prp_delete_func_cb prp_delete, H5P_prp_copy_func_cb prp_copy, H5P_prp_compare_func_cb prp_cmp, H5P_prp_close_func_cb prp_close) throws HDF5LibraryException;
 
-    // public synchronized static native int H5Piterate(long plist, int[] idx, H5P_iterate_cb op, H5P_iterate_t op_data) throws HDF5LibraryException;
+    public synchronized static native int H5Piterate(long plist, int[] idx, H5P_iterate_cb op, H5P_iterate_t op_data) throws HDF5LibraryException;
 
     // Object creation property list (OCPL) routines
 

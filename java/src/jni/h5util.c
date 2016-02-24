@@ -35,6 +35,13 @@ int     H5TOOLS_TEXT_BLOCK = 16;  /* Number of elements on a line in a text expo
 
 JavaVM *jvm;
 jobject visit_callback;
+jobject copy_callback;
+jobject close_callback;
+jobject create_callback;
+jobject compare_callback;
+jobject get_callback;
+jobject set_callback;
+jobject delete_callback;
 
 /********************/
 /* Local Prototypes */
