@@ -4578,22 +4578,39 @@ public class H5 implements java.io.Serializable {
 
     private synchronized static native long _H5Pcopy(long plist) throws HDF5LibraryException;
 
-    public static long H5Pcreate_class(long parent_class, String name, H5P_cls_create_func_cb create_op, H5P_cls_create_func_t create_data,
-             H5P_cls_copy_func_cb copy_op, H5P_cls_copy_func_t copy_data, H5P_cls_close_func_cb close_op, H5P_cls_close_func_t close_data) throws HDF5LibraryException {
-        long id = _H5Pcreate_class(parent_class, name, create_op, create_data, copy_op, copy_data, close_op, close_data);
+    public static long H5Pcreate_class_nocb(long parent_class, String name) throws HDF5LibraryException {
+        long id = _H5Pcreate_class_nocb(parent_class, name);
           if (id > 0) {
-            log.trace("OPEN_IDS: H5Pcreate_class add {}", id);
+            log.trace("OPEN_IDS: H5Pcreate_class_nocb add {}", id);
             OPEN_IDS.add(id);
             log.trace("OPEN_IDS: {}", OPEN_IDS.size());
         }
         return id;
     }
 
-    private synchronized static native long _H5Pcreate_class(long parent_class, String name, H5P_cls_create_func_cb create_op, H5P_cls_create_func_t create_data,
-            H5P_cls_copy_func_cb copy_op, H5P_cls_copy_func_t copy_data, H5P_cls_close_func_cb close_op, H5P_cls_close_func_t close_data) throws HDF5LibraryException;;
+    private synchronized static native long _H5Pcreate_class_nocb(long parent_class, String name) throws HDF5LibraryException;
 
-    public synchronized static native void H5Pregister2(long plist_class, String name, long size, byte[] def_value, H5P_prp_create_func_cb prp_create, H5P_prp_set_func_cb prp_set,
-          H5P_prp_get_func_cb prp_get, H5P_prp_delete_func_cb prp_delete, H5P_prp_copy_func_cb prp_copy, H5P_prp_compare_func_cb prp_cmp, H5P_prp_close_func_cb prp_close) throws HDF5LibraryException;
+//    public static long H5Pcreate_class(long parent_class, String name, H5P_cls_create_func_cb create_op, H5P_cls_create_func_t create_data,
+//             H5P_cls_copy_func_cb copy_op, H5P_cls_copy_func_t copy_data, H5P_cls_close_func_cb close_op, H5P_cls_close_func_t close_data) throws HDF5LibraryException {
+//        long id = _H5Pcreate_class(parent_class, name, create_op, create_data, copy_op, copy_data, close_op, close_data);
+//          if (id > 0) {
+//            log.trace("OPEN_IDS: H5Pcreate_class add {}", id);
+//            OPEN_IDS.add(id);
+//            log.trace("OPEN_IDS: {}", OPEN_IDS.size());
+//        }
+//        return id;
+//    }
+//
+//    private synchronized static native long _H5Pcreate_class(long parent_class, String name, H5P_cls_create_func_cb create_op, H5P_cls_create_func_t create_data,
+//            H5P_cls_copy_func_cb copy_op, H5P_cls_copy_func_t copy_data, H5P_cls_close_func_cb close_op, H5P_cls_close_func_t close_data) throws HDF5LibraryException;
+
+    public synchronized static native void H5Pregister2_nocb(long plist_class, String name, long size, byte[] def_value) throws HDF5LibraryException;
+
+//    public synchronized static native void H5Pregister2(long plist_class, String name, long size, byte[] def_value, H5P_prp_create_func_cb prp_create, H5P_prp_set_func_cb prp_set,
+//          H5P_prp_get_func_cb prp_get, H5P_prp_delete_func_cb prp_delete, H5P_prp_copy_func_cb prp_copy, H5P_prp_compare_func_cb prp_cmp, H5P_prp_close_func_cb prp_close) throws HDF5LibraryException;
+
+     public synchronized static native void H5Pinsert2_nocb(long plist, String name, long size,  byte[] value) throws HDF5LibraryException;
+
 
     // public synchronized static native void H5Pinsert2(long plist, String name, long size,  byte[] value, H5P_prp_set_func_cb prp_set, H5P_prp_get_func_cb prp_get,
     //      H5P_prp_delete_func_cb prp_delete, H5P_prp_copy_func_cb prp_copy, H5P_prp_compare_func_cb prp_cmp, H5P_prp_close_func_cb prp_close) throws HDF5LibraryException;

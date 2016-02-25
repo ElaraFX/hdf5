@@ -1244,6 +1244,13 @@ JNIEXPORT void JNICALL Java_hdf_hdf5lib_H5_H5Pset_1file_1space
 
 /*
  * Class:     hdf_hdf5lib_H5
+ * Method:    _H5Pcreate_class_nocb
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_hdf_hdf5lib_H5__1H5Pcreate_1class_1nocb
+  (JNIEnv*, jclass, jlong, jstring);
+/*
+ * Class:     hdf_hdf5lib_H5
  * Method:    _H5Pcreate_class
  * Signature: (JLjava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J
  */
@@ -1252,11 +1259,35 @@ JNIEXPORT jlong JNICALL Java_hdf_hdf5lib_H5__1H5Pcreate_1class
 
 /*
  * Class:     hdf_hdf5lib_H5
+ * Method:    H5Pregister2_nocb
+ * Signature: (JLjava/lang/String;J[B)V
+ */
+JNIEXPORT void JNICALL Java_hdf_hdf5lib_H5_H5Pregister2_1nocb
+  (JNIEnv*, jclass, jlong, jstring, jlong, jbyteArray);
+
+/*
+ * Class:     hdf_hdf5lib_H5
  * Method:    H5Pregister2
  * Signature: (JLjava/lang/String;J[BLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
  */
 JNIEXPORT void JNICALL Java_hdf_hdf5lib_H5_H5Pregister2
   (JNIEnv*, jclass, jlong, jstring, jlong, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject, jobject);
+
+/*
+ * Class:     hdf_hdf5lib_H5
+ * Method:    H5Pinsert2_nocb
+ * Signature: (JLjava/lang/String;J[B)V
+ */
+JNIEXPORT void JNICALL Java_hdf_hdf5lib_H5_H5Pinsert2_1nocb
+  (JNIEnv*, jclass, jlong, jstring, jlong, jbyteArray);
+
+/*
+ * Class:     hdf_hdf5lib_H5
+ * Method:    H5Pinsert2
+ * Signature: (JLjava/lang/String;J[BLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL Java_hdf_hdf5lib_H5_H5Pinsert2
+  (JNIEnv*, jclass, jlong, jstring, jlong, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject);
 
 /*
  * Class:     hdf_hdf5lib_H5

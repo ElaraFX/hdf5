@@ -4796,10 +4796,10 @@ Java_hdf_hdf5lib_H5_H5Pset_1file_1space(JNIEnv *env, jclass clss, jlong fcpl_id,
 
 
 static herr_t
-H5P_cls_create_func_cb(hid_t prop_id, void *create_data)
+H5P_cls_create_cb(hid_t prop_id, void *create_data)
 {
     JNIEnv    *cbenv;
-    jint       status;
+    jint       status = -1;
     jclass     cls;
     jmethodID  mid;
     jmethodID  constructor;
@@ -4809,16 +4809,18 @@ H5P_cls_create_func_cb(hid_t prop_id, void *create_data)
         if (cls != 0) {
             mid = CBENVPTR->GetMethodID(CBENVPAR cls, "callback", "(JLhdf/hdf5lib/callbacks/H5P_cls_create_func_t;)I");
             if (mid != 0) {
+                /* fprintf(stderr, "JNI H5P_cls_create_func_cb execute\n"); fflush(stderr); */
                 status = CBENVPTR->CallIntMethod(CBENVPAR create_callback, mid, prop_id, create_data);
+                /* fprintf(stderr, "\nJNI H5P_cls_create_func_cb status: %d\n", status); fflush(stderr); */
             } /* end if */
         } /* end if */
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_cls_create_func_cb */
+} /* end H5P_cls_create_cb */
 
 static herr_t
-H5P_cls_copy_func_cb(hid_t new_prop_id, hid_t old_prop_id, void *copy_data)
+H5P_cls_copy_cb(hid_t new_prop_id, hid_t old_prop_id, void *copy_data)
 {
     JNIEnv    *cbenv;
     jint       status;
@@ -4837,10 +4839,10 @@ H5P_cls_copy_func_cb(hid_t new_prop_id, hid_t old_prop_id, void *copy_data)
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_cls_ccopy_func_cb */
+} /* end H5P_cls_ccopy_cb */
 
 static herr_t
-H5P_cls_close_func_cb(hid_t prop_id, void *close_data)
+H5P_cls_close_cb(hid_t prop_id, void *close_data)
 {
     JNIEnv    *cbenv;
     jint       status;
@@ -4859,7 +4861,30 @@ H5P_cls_close_func_cb(hid_t prop_id, void *close_data)
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_cls_close_func_cb */
+} /* end H5P_cls_close_cb */
+
+/*
+ * Class:     hdf_hdf5lib_H5
+ * Method:    _H5Pcreate_class_nocb
+ * Signature: (JLjava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J
+ */
+JNIEXPORT jlong JNICALL
+Java_hdf_hdf5lib_H5__1H5Pcreate_1class_1nocb(JNIEnv *env, jclass clss, jlong parent_class, jstring name)
+{
+    hid_t class_id = -1;
+    const char *cstr;
+
+    PIN_JAVA_STRING(name, cstr, -1);
+
+    class_id = H5Pcreate_class((hid_t)parent_class, cstr,  NULL, NULL, NULL, NULL, NULL, NULL);
+
+    UNPIN_JAVA_STRING(name, cstr);
+
+    if (class_id < 0)
+        h5libraryError(env);
+
+    return (jlong)class_id;
+} /* end Java_hdf_hdf5lib_H5__1H5Pcreate_1class_1nocb */
 
 /*
  * Class:     hdf_hdf5lib_H5
@@ -4878,8 +4903,8 @@ Java_hdf_hdf5lib_H5__1H5Pcreate_1class(JNIEnv *env, jclass clss, jlong parent_cl
 
     PIN_JAVA_STRING(name, cstr, -1);
 
-    class_id = H5Pcreate_class((hid_t)parent_class, cstr, (H5P_cls_create_func_t)H5P_cls_create_func_cb, (void*) create_data,
-            (H5P_cls_copy_func_t)H5P_cls_copy_func_cb, (void*) copy_data, (H5P_cls_close_func_t)H5P_cls_close_func_cb, (void*) close_data);
+    class_id = H5Pcreate_class((hid_t)parent_class, cstr, (H5P_cls_create_func_t)H5P_cls_create_cb, (void*) create_data,
+            (H5P_cls_copy_func_t)H5P_cls_copy_cb, (void*) copy_data, (H5P_cls_close_func_t)H5P_cls_close_cb, (void*) close_data);
 
     UNPIN_JAVA_STRING(name, cstr);
 
@@ -4890,7 +4915,7 @@ Java_hdf_hdf5lib_H5__1H5Pcreate_1class(JNIEnv *env, jclass clss, jlong parent_cl
 } /* end Java_hdf_hdf5lib_H5__1H5Pcreate_1class */
 
 static herr_t
-H5P_prp_create_func_cb(const char *name, size_t size, void *value)
+H5P_prp_create_cb(const char *name, size_t size, void *value)
 {
     JNIEnv    *cbenv;
     jint       status;
@@ -4911,10 +4936,10 @@ H5P_prp_create_func_cb(const char *name, size_t size, void *value)
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_prp_create_func_cb */
+} /* end H5P_prp_create_cb */
 
 static herr_t
-H5P_prp_copy_func_cb(const char *name, size_t size, void *value)
+H5P_prp_copy_cb(const char *name, size_t size, void *value)
 {
     JNIEnv    *cbenv;
     jint       status;
@@ -4935,10 +4960,10 @@ H5P_prp_copy_func_cb(const char *name, size_t size, void *value)
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_prp_copy_func_cb */
+} /* end H5P_prp_copy_cb */
 
 static herr_t
-H5P_prp_close_func_cb(const char *name, size_t size, void *value)
+H5P_prp_close_cb(const char *name, size_t size, void *value)
 {
     JNIEnv    *cbenv;
     jint       status;
@@ -4959,10 +4984,10 @@ H5P_prp_close_func_cb(const char *name, size_t size, void *value)
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_prp_close_func_cb */
+} /* end H5P_prp_close_cb */
 
 static int
-H5P_prp_compare_func_cb(void *value1, void *value2, size_t size)
+H5P_prp_compare_cb(void *value1, void *value2, size_t size)
 {
     JNIEnv    *cbenv;
     jint       status;
@@ -4981,10 +5006,10 @@ H5P_prp_compare_func_cb(void *value1, void *value2, size_t size)
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_prp_compare_func_cb */
+} /* end H5P_prp_compare_cb */
 
 static herr_t
-H5P_prp_get_func_cb(hid_t prop_id, const char *name, size_t size, void *value)
+H5P_prp_get_cb(hid_t prop_id, const char *name, size_t size, void *value)
 {
     JNIEnv    *cbenv;
     jint       status;
@@ -5005,10 +5030,10 @@ H5P_prp_get_func_cb(hid_t prop_id, const char *name, size_t size, void *value)
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_prp_get_func_cb */
+} /* end H5P_prp_get_cb */
 
 static herr_t
-H5P_prp_set_func_cb(hid_t prop_id, const char *name, size_t size, void *value)
+H5P_prp_set_cb(hid_t prop_id, const char *name, size_t size, void *value)
 {
     JNIEnv    *cbenv;
     jint       status;
@@ -5029,10 +5054,10 @@ H5P_prp_set_func_cb(hid_t prop_id, const char *name, size_t size, void *value)
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_prp_set_func_cb */
+} /* end H5P_prp_set_cb */
 
 static herr_t
-H5P_prp_delete_func_cb(hid_t prop_id, const char *name, size_t size, void *value)
+H5P_prp_delete_cb(hid_t prop_id, const char *name, size_t size, void *value)
 {
     JNIEnv    *cbenv;
     jint       status;
@@ -5053,8 +5078,40 @@ H5P_prp_delete_func_cb(hid_t prop_id, const char *name, size_t size, void *value
     } /* end if */
     JVMPTR->DetachCurrentThread(JVMPAR);
     return status;
-} /* end H5P_prp_delete_func_cb */
+} /* end H5P_prp_delete_cb */
 
+/*
+ * Class:     hdf_hdf5lib_H5
+ * Method:    H5Pregister2_nocb
+ * Signature: (JLjava/lang/String;J[B)V
+ */
+JNIEXPORT void JNICALL
+Java_hdf_hdf5lib_H5_H5Pregister2_1nocb(JNIEnv *env, jclass clss, jlong cls_id, jstring name, jlong prp_size, jbyteArray def_value)
+{
+    herr_t   status = -1;
+    jbyte   *buffP;
+    jboolean isCopy2;
+    const char *cstr;
+
+    PIN_JAVA_STRING0(name, cstr);
+    buffP = ENVPTR->GetByteArrayElements(ENVPAR def_value, &isCopy2);
+    if (buffP == NULL) {
+        UNPIN_JAVA_STRING(name, cstr);
+        h5JNIFatalError(env, "H5Pregister2:  buf not pinned");
+    } /* end if */
+    else {
+        status = H5Pregister2((hid_t)cls_id, cstr, (size_t)prp_size, (void*)buffP, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+        UNPIN_JAVA_STRING(name, cstr);
+        if (status < 0) {
+            ENVPTR->ReleaseByteArrayElements(ENVPAR def_value, buffP, JNI_ABORT);
+            h5libraryError(env);
+        } /* end if */
+        else {
+            ENVPTR->ReleaseByteArrayElements(ENVPAR def_value, buffP, 0);
+        } /* end else */
+    } /* end else */
+} /* end Java_hdf_hdf5lib_H5_H5Pregister2_1nocb */
 
 /*
  * Class:     hdf_hdf5lib_H5
@@ -5082,12 +5139,12 @@ Java_hdf_hdf5lib_H5_H5Pregister2(JNIEnv *env, jclass clss, jlong cls_id, jstring
     buffP = ENVPTR->GetByteArrayElements(ENVPAR def_value, &isCopy2);
     if (buffP == NULL) {
         UNPIN_JAVA_STRING(name, cstr);
-        h5JNIFatalError(env, "H5Dread:  buf not pinned");
+        h5JNIFatalError(env, "H5Pregister2:  buf not pinned");
     } /* end if */
     else {
-        status = H5Pregister2((hid_t)cls_id, cstr, (size_t)prp_size, (void*)buffP, (H5P_prp_create_func_t)H5P_prp_create_func_cb,
-            (H5P_prp_set_func_t)H5P_prp_set_func_cb, (H5P_prp_get_func_t)H5P_prp_get_func_cb, (H5P_prp_delete_func_t)H5P_prp_delete_func_cb,
-            (H5P_prp_copy_func_t)H5P_prp_copy_func_cb, (H5P_prp_compare_func_t)H5P_prp_compare_func_cb, (H5P_prp_close_func_t)H5P_prp_close_func_cb);
+        status = H5Pregister2((hid_t)cls_id, cstr, (size_t)prp_size, (void*)buffP, (H5P_prp_create_func_t)H5P_prp_create_cb,
+            (H5P_prp_set_func_t)H5P_prp_set_cb, (H5P_prp_get_func_t)H5P_prp_get_cb, (H5P_prp_delete_func_t)H5P_prp_delete_cb,
+            (H5P_prp_copy_func_t)H5P_prp_copy_cb, (H5P_prp_compare_func_t)H5P_prp_compare_cb, (H5P_prp_close_func_t)H5P_prp_close_cb);
 
         UNPIN_JAVA_STRING(name, cstr);
         if (status < 0) {
@@ -5099,6 +5156,83 @@ Java_hdf_hdf5lib_H5_H5Pregister2(JNIEnv *env, jclass clss, jlong cls_id, jstring
         } /* end else */
     } /* end else */
 } /* end Java_hdf_hdf5lib_H5_H5Pregister2 */
+
+/*
+ * Class:     hdf_hdf5lib_H5
+ * Method:    H5Pinsert2_nocb
+ * Signature: (JLjava/lang/String;J[B)V
+ */
+JNIEXPORT void JNICALL
+Java_hdf_hdf5lib_H5_H5Pinsert2_1nocb(JNIEnv *env, jclass clss, jlong cls_id, jstring name, jlong prp_size, jbyteArray def_value)
+{
+    herr_t   status = -1;
+    jbyte   *buffP;
+    jboolean isCopy2;
+    const char *cstr;
+
+    PIN_JAVA_STRING0(name, cstr);
+    buffP = ENVPTR->GetByteArrayElements(ENVPAR def_value, &isCopy2);
+    if (buffP == NULL) {
+        UNPIN_JAVA_STRING(name, cstr);
+        h5JNIFatalError(env, "H5Pinsert2:  buf not pinned");
+    } /* end if */
+    else {
+        status = H5Pinsert2((hid_t)cls_id, cstr, (size_t)prp_size, (void*)buffP, NULL, NULL, NULL, NULL, NULL, NULL);
+
+        UNPIN_JAVA_STRING(name, cstr);
+        if (status < 0) {
+            ENVPTR->ReleaseByteArrayElements(ENVPAR def_value, buffP, JNI_ABORT);
+            h5libraryError(env);
+        } /* end if */
+        else {
+            ENVPTR->ReleaseByteArrayElements(ENVPAR def_value, buffP, 0);
+        } /* end else */
+    } /* end else */
+} /* end Java_hdf_hdf5lib_H5_H5Pinsert2 */
+
+
+/*
+ * Class:     hdf_hdf5lib_H5
+ * Method:    H5Pinsert2
+ * Signature: (JLjava/lang/String;J[BLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL
+Java_hdf_hdf5lib_H5_H5Pinsert2(JNIEnv *env, jclass clss, jlong cls_id, jstring name, jlong prp_size,
+        jbyteArray def_value, jobject prp_set, jobject prp_get, jobject prp_delete,
+        jobject prp_copy, jobject prp_cmp, jobject prp_close)
+{
+    herr_t   status = -1;
+    jbyte   *buffP;
+    jboolean isCopy2;
+    const char *cstr;
+    copy_callback = prp_copy;
+    close_callback = prp_close;
+    compare_callback = prp_cmp;
+    set_callback = prp_set;
+    get_callback = prp_get;
+    delete_callback = prp_delete;
+
+    PIN_JAVA_STRING0(name, cstr);
+    buffP = ENVPTR->GetByteArrayElements(ENVPAR def_value, &isCopy2);
+    if (buffP == NULL) {
+        UNPIN_JAVA_STRING(name, cstr);
+        h5JNIFatalError(env, "H5Pinsert2:  buf not pinned");
+    } /* end if */
+    else {
+        status = H5Pinsert2((hid_t)cls_id, cstr, (size_t)prp_size, (void*)buffP,
+            (H5P_prp_set_func_t)H5P_prp_set_cb, (H5P_prp_get_func_t)H5P_prp_get_cb, (H5P_prp_delete_func_t)H5P_prp_delete_cb,
+            (H5P_prp_copy_func_t)H5P_prp_copy_cb, (H5P_prp_compare_func_t)H5P_prp_compare_cb, (H5P_prp_close_func_t)H5P_prp_close_cb);
+
+        UNPIN_JAVA_STRING(name, cstr);
+        if (status < 0) {
+            ENVPTR->ReleaseByteArrayElements(ENVPAR def_value, buffP, JNI_ABORT);
+            h5libraryError(env);
+        } /* end if */
+        else {
+            ENVPTR->ReleaseByteArrayElements(ENVPAR def_value, buffP, 0);
+        } /* end else */
+    } /* end else */
+} /* end Java_hdf_hdf5lib_H5_H5Pinsert2 */
 
 static herr_t
 H5P_iterate_cb(hid_t prop_id, const char *name, void *op_data)

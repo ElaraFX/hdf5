@@ -96,7 +96,7 @@ public class TestH5Plist {
         System.out.print(testname.getMethodName());
         // Create a new generic class, derived from the root of the class hierarchy
         try {
-            plist_class_id = H5.H5Pcreate_class(HDF5Constants.H5P_ROOT, CLASS1_NAME, null, null, null, null, null, null);
+            plist_class_id = H5.H5Pcreate_class_nocb(HDF5Constants.H5P_ROOT, CLASS1_NAME);
         }
         catch (Throwable err) {
             err.printStackTrace();
@@ -183,7 +183,7 @@ public class TestH5Plist {
 
             // Create another new generic class, derived from file creation class
             try {
-                cid1 = H5.H5Pcreate_class(HDF5Constants.H5P_FILE_CREATE, CLASS2_NAME, null, null, null, null, null, null);
+                cid1 = H5.H5Pcreate_class_nocb(HDF5Constants.H5P_FILE_CREATE, CLASS2_NAME);
             }
             catch (Throwable err) {
                 err.printStackTrace();
@@ -312,7 +312,7 @@ public class TestH5Plist {
         try {
             byte[] prop_value = HDFNativeData.intToByte(prop1_def);
 
-            H5.H5Pregister2(plist_class_id, PROP1_NAME, PROP1_SIZE, prop_value, null, null, null, null, null, null, null);
+            H5.H5Pregister2_nocb(plist_class_id, PROP1_NAME, PROP1_SIZE, prop_value);
         }
         catch (Throwable err) {
             err.printStackTrace();
@@ -323,7 +323,7 @@ public class TestH5Plist {
         try {
             byte[] prop_value = HDFNativeData.intToByte(prop1_def);
 
-            H5.H5Pregister2(plist_class_id, PROP1_NAME, PROP1_SIZE, prop_value, null, null, null, null, null, null, null);
+            H5.H5Pregister2_nocb(plist_class_id, PROP1_NAME, PROP1_SIZE, prop_value);
             fail("H5Pregister2 plist_class_id: "+PROP1_NAME);
         }
         catch (Throwable err) {
@@ -363,7 +363,7 @@ public class TestH5Plist {
         try {
             byte[] prop_value = HDFNativeData.floatToByte(prop2_def);
 
-            H5.H5Pregister2(plist_class_id, PROP2_NAME, PROP2_SIZE, prop_value, null, null, null, null, null, null, null);
+            H5.H5Pregister2_nocb(plist_class_id, PROP2_NAME, PROP2_SIZE, prop_value);
         }
         catch (Throwable err) {
             err.printStackTrace();
@@ -374,7 +374,7 @@ public class TestH5Plist {
         try {
             byte[] prop_value = HDFNativeData.floatToByte(prop2_def);
 
-            H5.H5Pregister2(plist_class_id, PROP2_NAME, PROP2_SIZE, prop_value, null, null, null, null, null, null, null);
+            H5.H5Pregister2_nocb(plist_class_id, PROP2_NAME, PROP2_SIZE, prop_value);
             fail("H5Pregister2 plist_class_id: "+PROP2_NAME);
         }
         catch (Throwable err) {
@@ -414,7 +414,7 @@ public class TestH5Plist {
         try {
             byte[] prop_value = new String(prop3_def).getBytes(StandardCharsets.UTF_8);
 
-            H5.H5Pregister2(plist_class_id, PROP3_NAME, PROP3_SIZE, prop_value, null, null, null, null, null, null, null);
+            H5.H5Pregister2_nocb(plist_class_id, PROP3_NAME, PROP3_SIZE, prop_value);
         }
         catch (Throwable err) {
             err.printStackTrace();
@@ -534,7 +534,7 @@ public class TestH5Plist {
         H5P_iterate_t iter_data = new H5P_iter_data();
 
         class H5P_iter_callback implements H5P_iterate_cb {
-            public int callback(long group, String name, H5P_iterate_t op_data) {
+            public int callback(long list_id, String name, H5P_iterate_t op_data) {
                 idata id = ((H5P_iter_data)op_data).iterdata.get(0);
                 return name.compareTo(id.iter_names[id.iter_count++]);
             }
@@ -549,7 +549,7 @@ public class TestH5Plist {
         try {
             byte[] prop_value = HDFNativeData.intToByte(prop1_def);
 
-            H5.H5Pregister2(plist_class_id, PROP1_NAME, PROP1_SIZE, prop_value, null, null, null, null, null, null, null);
+            H5.H5Pregister2_nocb(plist_class_id, PROP1_NAME, PROP1_SIZE, prop_value);
         }
         catch (Throwable err) {
             err.printStackTrace();
@@ -560,7 +560,7 @@ public class TestH5Plist {
         try {
             byte[] prop_value = HDFNativeData.floatToByte(prop2_def);
 
-            H5.H5Pregister2(plist_class_id, PROP2_NAME, PROP2_SIZE, prop_value, null, null, null, null, null, null, null);
+            H5.H5Pregister2_nocb(plist_class_id, PROP2_NAME, PROP2_SIZE, prop_value);
         }
         catch (Throwable err) {
             err.printStackTrace();
@@ -571,7 +571,7 @@ public class TestH5Plist {
         try {
             byte[] prop_value = new String(prop3_def).getBytes(StandardCharsets.UTF_8);
 
-            H5.H5Pregister2(plist_class_id, PROP3_NAME, PROP3_SIZE, prop_value, null, null, null, null, null, null, null);
+            H5.H5Pregister2_nocb(plist_class_id, PROP3_NAME, PROP3_SIZE, prop_value);
         }
         catch (Throwable err) {
             err.printStackTrace();
@@ -582,7 +582,7 @@ public class TestH5Plist {
         try {
             byte[] prop_value = HDFNativeData.doubleToByte(prop4_def);
 
-            H5.H5Pregister2(plist_class_id, PROP4_NAME, PROP4_SIZE, prop_value, null, null, null, null, null, null, null);
+            H5.H5Pregister2_nocb(plist_class_id, PROP4_NAME, PROP4_SIZE, prop_value);
         }
         catch (Throwable err) {
             err.printStackTrace();
@@ -629,4 +629,385 @@ public class TestH5Plist {
 
         assertTrue("H5Piterate: "+nprops+"="+idx[0], nprops == idx[0]);
     }
+
+    // Test basic generic property list code.
+    //      Tests creating new generic property lists and adding and
+    //      removing properties from them.
+    @Test
+    public void testH5P_genprop_basic_list_prop() {
+        int         status = -1;
+        long        lid1 = -1;        // Generic Property list ID
+        long        nprops = -1;      // Number of properties in class
+
+        try {
+            // Add several properties (several w/default values)
+
+            // Insert first property into class (with no callbacks)
+            try {
+                byte[] prop_value = HDFNativeData.intToByte(prop1_def);
+
+                H5.H5Pregister2_nocb(plist_class_id, PROP1_NAME, PROP1_SIZE, prop_value);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pregister2 plist_class_id: "+PROP1_NAME + err);
+            }
+
+            // Insert second property into class (with no callbacks)
+            try {
+                byte[] prop_value = HDFNativeData.floatToByte(prop2_def);
+
+                H5.H5Pregister2_nocb(plist_class_id, PROP2_NAME, PROP2_SIZE, prop_value);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pregister2 plist_class_id: "+PROP2_NAME + err);
+            }
+
+            // Create a property list from the class
+            try {
+                lid1 = H5.H5Pcreate(plist_class_id);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pcreate lid1: " + err);
+            }
+
+            // Check the number of properties in class
+            try {
+                nprops = H5.H5Pget_nprops(lid1);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pget_nprops lid1: " + err);
+            }
+            assertTrue("H5Pget_nprops: "+nprops, nprops==2);
+
+            // Add temporary properties
+
+            // Insert first temporary property into list (with no callbacks)
+            try {
+                byte[] prop_value = new String(prop3_def).getBytes(StandardCharsets.UTF_8);
+
+                H5.H5Pinsert2_nocb(lid1, PROP3_NAME, PROP3_SIZE, prop_value);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pinsertr2 lid1: "+PROP3_NAME + err);
+            }
+
+            // Insert second temporary property into list (with no callbacks)
+            try {
+                byte[] prop_value = HDFNativeData.doubleToByte(prop4_def);
+
+                H5.H5Pinsert2_nocb(lid1, PROP4_NAME, PROP4_SIZE, prop_value);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pinsert2 lid1: "+PROP4_NAME + err);
+            }
+
+            // Check the number of properties in class
+            try {
+                nprops = H5.H5Pget_nprops(lid1);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pget_nprops lid1: " + err);
+            }
+            assertTrue("H5Pget_nprops: "+nprops, nprops==4);
+
+            // Check existence of all properties
+            try {
+                status = H5.H5Pexist(lid1, PROP1_NAME);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pexist plist_class_id: " + err);
+            }
+            assertTrue("H5Pexist lid1 "+PROP1_NAME, status == 1);
+            try {
+                status = H5.H5Pexist(lid1, PROP2_NAME);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pexist plist_class_id: " + err);
+            }
+            assertTrue("H5Pexist lid1 "+PROP2_NAME, status == 1);
+            try {
+                status = H5.H5Pexist(lid1, PROP3_NAME);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pexist plist_class_id: " + err);
+            }
+            assertTrue("H5Pexist lid1 "+PROP3_NAME, status == 1);
+            try {
+                status = H5.H5Pexist(lid1, PROP4_NAME);
+            }
+            catch (Throwable err) {
+                err.printStackTrace();
+                fail("H5Pexist plist_class_id: " + err);
+            }
+            assertTrue("H5Pexist lid1 "+PROP4_NAME, status == 1);
+
+        }
+        finally {
+            if (lid1 > 0)
+                try {H5.H5Pclose(lid1);} catch (Throwable err) {}
+        }
+    }
+
+//    // Test basic generic property list code. Tests callbacks for property lists in a generic class.
+//    @Test
+//    public void testH5P_genprop_class_callback() {
+//        class cdata {
+//            public long cls_id = -1;
+//            public int cls_count = -1;
+//            cdata(long id, int count) {
+//                this.cls_id = id;
+//                this.cls_count = count;
+//            }
+//        }
+//        class H5P_cls_create_data implements H5P_cls_create_func_t {
+//            public ArrayList<cdata> clsdata = new ArrayList<cdata>();
+//        }
+//        H5P_cls_create_func_t cls_create_data = new H5P_cls_create_data();
+//
+//        class H5P_cls_create_callback implements H5P_cls_create_func_cb {
+//            public int callback(long list_id, H5P_cls_create_func_t cls_data) {
+//                System.err.println("H5P_cls_create_callback enter");
+//                cdata cd = ((H5P_cls_create_data)cls_create_data).clsdata.get(0);
+//                cd.cls_count++;
+//                cd.cls_id = list_id;
+//                return 0;
+//            }
+//        }
+//        H5P_cls_create_func_cb cls_create_cb = new H5P_cls_create_callback();
+//
+//        class H5P_cls_copy_data implements H5P_cls_copy_func_t {
+//            public ArrayList<cdata> clsdata = new ArrayList<cdata>();
+//        }
+//        H5P_cls_copy_func_t cls_copy_data = new H5P_cls_copy_data();
+//
+//        class H5P_cls_copy_callback implements H5P_cls_copy_func_cb {
+//            public int callback(long list_id1, long list_id2, H5P_cls_copy_func_t cls_data) {
+//                cdata cd = ((H5P_cls_copy_data)cls_copy_data).clsdata.get(0);
+//                cd.cls_count++;
+//                cd.cls_id = list_id1;
+//                return 0;
+//            }
+//        }
+//        H5P_cls_copy_func_cb cls_copy_cb = new H5P_cls_copy_callback();
+//
+//        class H5P_cls_close_data implements H5P_cls_close_func_t {
+//            public ArrayList<cdata> clsdata = new ArrayList<cdata>();
+//        }
+//        H5P_cls_close_func_t cls_close_data = new H5P_cls_close_data();
+//
+//        class H5P_cls_close_callback implements H5P_cls_close_func_cb {
+//            public int callback(long list_id, H5P_cls_close_func_t cls_data) {
+//                cdata cd = ((H5P_cls_close_data)cls_close_data).clsdata.get(0);
+//                cd.cls_count++;
+//                cd.cls_id = list_id;
+//                return 0;
+//            }
+//        }
+//        H5P_cls_close_func_cb cls_close_cb = new H5P_cls_close_callback();
+//
+//        long    cid1 = -1;        // Generic Property class ID
+//        long    cid2 = -1;        // Generic Property class ID
+//        long    lid1 = -1;        // Generic Property list ID
+//        long    lid2 = -1;        // Generic Property list ID
+//        long    lid3 = -1;        // Generic Property list ID
+//        long    nprops = -1;    // Number of properties in class
+//
+//        try {
+//            // Create a new generic class, derived from the root of the class hierarchy
+//            try {
+//                cid1 = H5.H5Pcreate_class(HDF5Constants.H5P_ROOT, CLASS1_NAME, cls_create_cb, cls_create_data, cls_copy_cb, cls_copy_data, cls_close_cb, cls_close_data);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pcreate_class cid1: " + err);
+//            }
+//            assertTrue("H5Pcreate_class cid1", cid1 >= 0);
+//
+//            // Insert first property into class (with no callbacks)
+//            try {
+//                byte[] prop_value = HDFNativeData.intToByte(prop1_def);
+//
+//                H5.H5Pregister2(cid1, PROP1_NAME, PROP1_SIZE, prop_value, null, null, null, null, null, null, null);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pregister2 cid1: "+PROP1_NAME + err);
+//            }
+//
+//            // Insert second property into class (with no callbacks)
+//            try {
+//                byte[] prop_value = HDFNativeData.floatToByte(prop2_def);
+//
+//                H5.H5Pregister2(cid1, PROP2_NAME, PROP2_SIZE, prop_value, null, null, null, null, null, null, null);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pregister2 cid1: "+PROP2_NAME + err);
+//            }
+//
+//            // Insert third property into class (with no callbacks)
+//            try {
+//                byte[] prop_value = new String(prop3_def).getBytes(StandardCharsets.UTF_8);
+//
+//                H5.H5Pregister2(cid1, PROP3_NAME, PROP3_SIZE, prop_value, null, null, null, null, null, null, null);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pregister2 cid1: "+PROP3_NAME + err);
+//            }
+//
+//            // Check the number of properties in class
+//            try {
+//                nprops = H5.H5Pget_nprops(cid1);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pget_nprops cid1: " + err);
+//            }
+//            assertTrue("H5Pget_nprops: "+nprops, nprops==3);
+//
+//            // Initialize class callback structs
+//            cdata create_id = new cdata(-1, 0);
+//            cdata copy_id = new cdata(-1, 0);
+//            cdata close_id = new cdata(-1, 0);
+//            ((H5P_cls_create_data)cls_create_data).clsdata.add(create_id);
+//            ((H5P_cls_copy_data)cls_copy_data).clsdata.add(copy_id);
+//            ((H5P_cls_close_data)cls_close_data).clsdata.add(close_id);
+//
+//            // Create a property list from the class
+//            try {
+//                lid1 = H5.H5Pcreate(cid1);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pcreate lid1: " + err);
+//            }
+//
+//            // Verify that the creation callback occurred
+//            assertFalse("H5Pcreate ",((H5P_cls_create_data)cls_create_data).clsdata.isEmpty());
+//            assertTrue("H5Pcreate "+((H5P_cls_create_data)cls_create_data).clsdata.get(0).cls_id ,((H5P_cls_create_data)cls_create_data).clsdata.get(0).cls_id == lid1);
+//            assertTrue("H5Pcreate "+(((H5P_cls_create_data)cls_create_data).clsdata.get(0)).cls_count,((cdata)((H5P_cls_create_data)cls_create_data).clsdata.get(0)).cls_count==1);
+//
+//            // Check the number of properties in list
+//            try {
+//                nprops = H5.H5Pget_nprops(lid1);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pget_nprops lid1: " + err);
+//            }
+//            assertTrue("H5Pget_nprops: "+nprops, nprops==3);
+//
+//            // Create another property list from the class
+//            try {
+//                lid2 = H5.H5Pcreate(cid1);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pcreate lid2: " + err);
+//            }
+//
+//            /* Verify that the creation callback occurred */
+//            assertFalse("H5Pcreate ",((H5P_cls_create_data)cls_create_data).clsdata.isEmpty());
+//            assertTrue("H5Pcreate "+((H5P_cls_create_data)cls_create_data).clsdata.get(0).cls_id ,((H5P_cls_create_data)cls_create_data).clsdata.get(0).cls_id == lid2);
+//            assertTrue("H5Pcreate "+(((H5P_cls_create_data)cls_create_data).clsdata.get(0)).cls_count,((cdata)((H5P_cls_create_data)cls_create_data).clsdata.get(0)).cls_count==2);
+//
+//            // Check the number of properties in list
+//            try {
+//                nprops = H5.H5Pget_nprops(lid2);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pget_nprops lid2: " + err);
+//            }
+//            assertTrue("H5Pget_nprops: "+nprops, nprops==3);
+//
+//            // Create another property list by copying an existing list
+//            try {
+//                lid3= H5.H5Pcopy(lid1);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pcopy lid3: " + err);
+//            }
+//
+//            // Verify that the copy callback occurred
+//            assertFalse("H5Pcopy ",((H5P_cls_copy_data)cls_copy_data).clsdata.isEmpty());
+//            assertTrue("H5Pcopy "+((H5P_cls_copy_data)cls_copy_data).clsdata.get(0).cls_id ,((H5P_cls_copy_data)cls_copy_data).clsdata.get(0).cls_id == lid3);
+//            assertTrue("H5Pcopy "+(((H5P_cls_copy_data)cls_copy_data).clsdata.get(0)).cls_count,((cdata)((H5P_cls_copy_data)cls_copy_data).clsdata.get(0)).cls_count==1);
+//
+//            // Check the number of properties in list
+//            try {
+//                nprops = H5.H5Pget_nprops(lid3);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pget_nprops lid3: " + err);
+//            }
+//            assertTrue("H5Pget_nprops: "+nprops, nprops==3);
+//
+//            // Close first list
+//            try {
+//                H5.H5Pclose(lid1);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pclose lid1: " + err);
+//            }
+//
+//            /* Verify that the close callback occurred */
+//            assertFalse("H5Pclose ",((H5P_cls_close_data)cls_close_data).clsdata.isEmpty());
+//            assertTrue("H5Pclose "+((H5P_cls_close_data)cls_close_data).clsdata.get(0).cls_id ,((H5P_cls_close_data)cls_copy_data).clsdata.get(0).cls_id == lid1);
+//            assertTrue("H5Pclose "+(((H5P_cls_close_data)cls_close_data).clsdata.get(0)).cls_count,((cdata)((H5P_cls_close_data)cls_copy_data).clsdata.get(0)).cls_count==1);
+//
+//            // Close second list
+//            try {
+//                H5.H5Pclose(lid2);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pclose lid2: " + err);
+//            }
+//
+//            // Verify that the close callback occurred
+//            assertTrue("H5Pclose "+((H5P_cls_close_data)cls_close_data).clsdata.get(0).cls_id ,((H5P_cls_close_data)cls_close_data).clsdata.get(0).cls_id == lid2);
+//            assertTrue("H5Pclose "+(((H5P_cls_close_data)cls_close_data).clsdata.get(0)).cls_count,((cdata)((H5P_cls_close_data)cls_close_data).clsdata.get(0)).cls_count==2);
+//
+//            // Close third list
+//            try {
+//                H5.H5Pclose(lid3);
+//            }
+//            catch (Throwable err) {
+//                err.printStackTrace();
+//                fail("H5Pclose lid3: " + err);
+//            }
+//
+//            // Verify that the close callback occurred
+//            assertTrue("H5Pclose "+((H5P_cls_close_data)cls_close_data).clsdata.get(0).cls_id ,((H5P_cls_close_data)cls_close_data).clsdata.get(0).cls_id == lid3);
+//            assertTrue("H5Pclose "+(((H5P_cls_close_data)cls_close_data).clsdata.get(0)).cls_count,((cdata)((H5P_cls_close_data)cls_close_data).clsdata.get(0)).cls_count==3);
+//        }
+//        finally {
+//            if (lid3 > 0)
+//                try {H5.H5Pclose(lid3);} catch (Throwable err) {}
+//            if (lid2 > 0)
+//                try {H5.H5Pclose(lid2);} catch (Throwable err) {}
+//            if (lid1 > 0)
+//                try {H5.H5Pclose(lid1);} catch (Throwable err) {}
+//            if (cid2 > 0)
+//                try {H5.H5Pclose_class(cid2);} catch (Throwable err) {}
+//            if (cid1 > 0)
+//                try {H5.H5Pclose_class(cid1);} catch (Throwable err) {}
+//        }
+//    }
+
 }
