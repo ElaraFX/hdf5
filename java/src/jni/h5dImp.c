@@ -56,9 +56,9 @@ extern jobject visit_callback;
 /********************/
 
 static herr_t H5DreadVL_str (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid, hid_t file_sid, hid_t xfer_plist_id, jobjectArray buf);
-static herr_t H5DreadVL_notstr (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid, hid_t file_sid, hid_t xfer_plist_id, jobjectArray buf);
+static herr_t H5DreadVL_array (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid, hid_t file_sid, hid_t xfer_plist_id, jobjectArray buf);
 static herr_t H5DwriteVL_str (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid, hid_t file_sid, hid_t xfer_plist_id, jobjectArray buf);
-static herr_t H5DwriteVL_notstr (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid, hid_t file_sid, hid_t xfer_plist_id, jobjectArray buf);
+static herr_t H5DwriteVL_array (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid, hid_t file_sid, hid_t xfer_plist_id, jobjectArray buf);
 
 /********************/
 /* Local Macros     */
@@ -1070,7 +1070,7 @@ Java_hdf_hdf5lib_H5_H5Dwrite_1string(JNIEnv *env, jclass clss, jlong dataset_id,
           jlong file_space_id, jlong xfer_plist_id, jobjectArray j_buf)
 {
     herr_t  status = -1;
-    char   **c_buf;
+    char   *c_buf;
     jsize  str_len;
     jsize   i;
     jsize   n;
@@ -1100,7 +1100,7 @@ Java_hdf_hdf5lib_H5_H5Dwrite_1string(JNIEnv *env, jclass clss, jlong dataset_id,
             const char *utf8 = ENVPTR->GetStringUTFChars(ENVPAR obj, 0);
 
             if (utf8) {
-                strcpy(c_buf[i * str_len], utf8);
+                strncpy(&c_buf[i * str_len], utf8, str_len);
             } /* end if */
 
             ENVPTR->ReleaseStringUTFChars(ENVPAR obj, utf8);
@@ -1158,11 +1158,11 @@ Java_hdf_hdf5lib_H5_H5DreadVL(JNIEnv *env, jclass clss, jlong dataset_id, jlong 
             } /* end for */
         } /* end if */
         else if (H5Tget_class((hid_t)mem_type_id) == H5T_VLEN) {
-        isVlenStr = 1; /* strings created by H5Tvlen_create(H5T_C_S1) */
+            isVlenStr = 1; /* strings created by H5Tvlen_create(H5T_C_S1) */
         } /* end else if */
 
         if (isStr == 0 || isComplex>0 || isVlenStr) {
-            return (jint) H5DreadVL_notstr(env, (hid_t)dataset_id, (hid_t)mem_type_id,
+            return (jint) H5DreadVL_array(env, (hid_t)dataset_id, (hid_t)mem_type_id,
                                         (hid_t)mem_space_id, (hid_t)file_space_id,
                                         (hid_t)xfer_plist_id, buf);
         } /* end if */
@@ -1178,7 +1178,7 @@ Java_hdf_hdf5lib_H5_H5DreadVL(JNIEnv *env, jclass clss, jlong dataset_id, jlong 
 } /* end Java_hdf_hdf5lib_H5_H5DreadVL */
 
 herr_t
-H5DreadVL_notstr (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid,
+H5DreadVL_array (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid,
         hid_t file_sid, hid_t xfer_plist_id, jobjectArray buf)
 {
     jint    i;
@@ -1194,7 +1194,7 @@ H5DreadVL_notstr (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid,
     n = ENVPTR->GetArrayLength(ENVPAR buf);
     rdata = (hvl_t*)HDcalloc((size_t)n, sizeof(hvl_t));
     if (rdata == NULL) {
-        h5JNIFatalError(env, "H5DreadVL_notstr:  failed to allocate buff for read");
+        h5JNIFatalError(env, "H5DreadVL_array:  failed to allocate buff for read");
     } /* end if */
     else {
         status = H5Dread(did, tid, mem_sid, file_sid, xfer_plist_id, rdata);
@@ -1202,7 +1202,7 @@ H5DreadVL_notstr (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid,
         if (status < 0) {
             H5Dvlen_reclaim(tid, mem_sid, xfer_plist_id, rdata);
             free(rdata);
-            h5JNIFatalError(env, "H5DreadVL_notstr: failed to read data");
+            h5JNIFatalError(env, "H5DreadVL_array: failed to read data");
         } /* end if */
         else {
             max_len = 1;
@@ -1218,7 +1218,7 @@ H5DreadVL_notstr (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid,
             if (h5str.s == NULL) {
                 H5Dvlen_reclaim(tid, mem_sid, xfer_plist_id, rdata);
                 HDfree(rdata);
-                h5JNIFatalError(env, "H5DreadVL_notstr:  failed to allocate string bufffer");
+                h5JNIFatalError(env, "H5DreadVL_array:  failed to allocate string bufffer");
             } /* end if */
             else {
                 for (i=0; i<n; i++) {
@@ -1236,7 +1236,7 @@ H5DreadVL_notstr (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid,
     } /* end else */
 
     return status;
-} /* end H5DreadVL_notstr */
+} /* end H5DreadVL_array */
 
 herr_t
 H5DreadVL_str (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid, hid_t
@@ -1318,7 +1318,7 @@ Java_hdf_hdf5lib_H5_H5DwriteVL(JNIEnv *env, jclass clss, jlong dataset_id, jlong
         } /* end else if */
 
         if (isStr == 0 || isComplex>0 || isVlenStr) {
-            return (jint) H5DwriteVL_notstr(env, (hid_t)dataset_id, (hid_t)mem_type_id,
+            return (jint) H5DwriteVL_array(env, (hid_t)dataset_id, (hid_t)mem_type_id,
                                         (hid_t)mem_space_id, (hid_t)file_space_id,
                                         (hid_t)xfer_plist_id, buf);
         } /* end if */
@@ -1388,7 +1388,7 @@ H5DwriteVL_str(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_space
 } /* end H5DwriteVL_str */
 
 herr_t
-H5DwriteVL_notstr(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_space_id,
+H5DwriteVL_array(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_space_id,
         hid_t file_space_id, hid_t xfer_plist_id, jobjectArray buf)
 {
     herr_t  status = -1;
@@ -1400,7 +1400,7 @@ H5DwriteVL_notstr(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_sp
     jint    i;
 
     if (buffP == NULL) {
-        h5JNIFatalError( env, "H5DwriteNotString:  buf not pinned");
+        h5JNIFatalError( env, "H5DwriteVL_array:  buf not pinned");
     } /* end if */
     else {
         /* rebuild VL structure */
@@ -1408,7 +1408,7 @@ H5DwriteVL_notstr(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_sp
         wdata = (hvl_t*)HDcalloc((size_t)n, sizeof(hvl_t));
 
         if (!wdata) {
-            h5JNIFatalError(env, "H5DwriteNotString:  cannot allocate buffer");
+            h5JNIFatalError(env, "H5DwriteVL_array:  cannot allocate buffer");
         } /* end if */
         else {
             size = H5Tget_size(mem_type_id);
@@ -1431,7 +1431,7 @@ H5DwriteVL_notstr(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_sp
     } /* end else */
 
     return (jint)status;
-} /* end H5DwriteVL_notstr */
+} /* end H5DwriteVL_array */
 
 /*
  * Class:     hdf_hdf5lib_H5
