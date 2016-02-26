@@ -1132,16 +1132,15 @@ Java_hdf_hdf5lib_H5_H5Dread_1VLStrings(JNIEnv *env, jclass clss, jlong dataset_i
           jlong file_space_id, jlong xfer_plist_id, jobjectArray buf)
 {
     herr_t  status = -1;
-    htri_t isStr=0, isVlenStr=0;
+    htri_t  isVlenStr=0;
 
     if (buf == NULL) {
         h5nullArgument(env, "H5Dread_VLStrings:  buf is NULL");
     } /* end if */
     else {
-        isStr = H5Tdetect_class((hid_t)mem_type_id, H5T_STRING);
         isVlenStr = H5Tis_variable_str((hid_t)mem_type_id);
 
-        if (isVlenStr && isStr) {
+        if (isVlenStr) {
             status = H5DreadVL_str(env, (hid_t)dataset_id, (hid_t)mem_type_id,
                                         (hid_t)mem_space_id, (hid_t)file_space_id,
                                         (hid_t)xfer_plist_id, buf);
@@ -1181,13 +1180,13 @@ H5DreadVL_str (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid, hid_t
             for (i=0; i < n; i++) {
                 jstr = ENVPTR->NewStringUTF(ENVPAR strs[i]);
                 ENVPTR->SetObjectArrayElement(ENVPAR buf, i, jstr);
-                free (strs[i]);
+                H5free_memory (strs[i]);
             } /* end for */
 
             /*
             for repeatedly reading a dataset with a large number of strs (e.g., 1,000,000 strings,
             H5Dvlen_reclaim() may crash on Windows because the Java GC will not be able to collect
-            free space in time. Instead, use "free(strs[i])" above to free individual strings
+            free space in time. Instead, use "H5free_memory(strs[i])" above to free individual strings
             after it is done.
             H5Dvlen_reclaim(tid, mem_sid, xfer_plist_id, strs);
             */
@@ -1210,16 +1209,15 @@ Java_hdf_hdf5lib_H5_H5Dwrite_1VLStrings(JNIEnv *env, jclass clss, jlong dataset_
           jlong file_space_id, jlong xfer_plist_id, jobjectArray buf)
 {
     herr_t  status = -1;
-    htri_t isStr=0, isVlenStr=0;
+    htri_t  isVlenStr=0;
 
     if (buf == NULL) {
         h5nullArgument(env, "H5Dwrite_VLStrings:  buf is NULL");
     } /* end if */
     else {
-        isStr = H5Tdetect_class((hid_t)mem_type_id, H5T_STRING);
         isVlenStr = H5Tis_variable_str((hid_t)mem_type_id);
 
-        if (isVlenStr && isStr) {
+        if (isVlenStr) {
             status = H5DwriteVL_str(env, (hid_t)dataset_id, (hid_t)mem_type_id,
                                         (hid_t)mem_space_id, (hid_t)file_space_id,
                                         (hid_t)xfer_plist_id, buf);
@@ -1258,7 +1256,7 @@ H5DwriteVL_str(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_space
                     wdata[i] = (char*)HDmalloc((size_t)length + 1);
                     if (wdata[i]) {
                         HDmemset(wdata[i], 0, (size_t)length + 1);
-                        HDstrncpy(wdata[i], utf8, (size_t)length);
+                        HDstrncpy(wdata[i], utf8, (size_t)length + 1);
                     } /* end if */
                 } /* end if */
 

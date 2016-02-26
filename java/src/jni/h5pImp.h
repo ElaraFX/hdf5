@@ -842,6 +842,14 @@ JNIEXPORT jint JNICALL Java_hdf_hdf5lib_H5_H5Pget_1attr_1phase_1change
 
 /*
  * Class:     hdf_hdf5lib_H5
+ * Method:    H5Pset_attr_phase_change
+ * Signature: (JII)V
+ */
+JNIEXPORT void JNICALL Java_hdf_hdf5lib_H5_H5Pset_1attr_1phase_1change
+(JNIEnv *, jclass, jlong, jint, jint);
+
+/*
+ * Class:     hdf_hdf5lib_H5
  * Method:    H5Pget_shared_mesg_phase_change
  * Signature: (J[I)I
  */

@@ -4644,6 +4644,26 @@ public class H5 implements java.io.Serializable {
             throws HDF5LibraryException, NullPointerException;
 
     /**
+     * H5Pset_attr_phase_change sets threshold values for attribute storage on an object. These
+     *      thresholds determine the point at which attribute storage changes
+     *      from compact storage (i.e., storage in the object header)
+     *      to dense storage (i.e., storage in a heap and indexed with a B-tree).
+     *
+     * @param ocpl_id
+     *            IN: : Object (dataset or group) creation property list identifier
+     * @param max_compact
+     *            IN: Maximum number of attributes to be stored in compact storage (Default: 8)
+     * @param min_dense
+     *            IN: Minimum number of attributes to be stored in dense storage (Default: 6)
+     *
+     * @exception HDF5LibraryException
+     *                - Error from the HDF-5 Library.
+     *
+     **/
+    public synchronized static native void H5Pset_attr_phase_change(long ocpl_id, int max_compact, int min_dense)
+            throws HDF5LibraryException;
+
+    /**
      * H5Pget_attr_creation_order retrieves the settings for tracking and indexing attribute creation order on an object
      *
      * @param ocpl_id
@@ -6792,7 +6812,6 @@ public class H5 implements java.io.Serializable {
     // hid_t  H5Pdecode(const void *buf);
 
     // Object creation property list (OCPL) routines //
-    // herr_t H5Pset_attr_phase_change( hid_t ocpl_id, unsigned max_compact, unsigned min_dense )
 
     // File creation property list (FCPL) routines //
 

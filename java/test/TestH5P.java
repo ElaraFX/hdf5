@@ -582,6 +582,23 @@ public class TestH5P {
         assertTrue("testH5Pget_attr_phase_change", ret_val >= 0);
         assertEquals("Default value of the max. no. of attributes stored in compact storage", 8, attributes[0]);
         assertEquals("Default value of the min. no. of attributes stored in dense storage", 6, attributes[1]);
+        try {
+            H5.H5Pset_attr_phase_change(ocpl_id, 9, 5);
+        }
+        catch (Throwable err) {
+            err.printStackTrace();
+            fail("H5Pset_attr_phase_change: " + err);
+        }
+        try {
+            ret_val = H5.H5Pget_attr_phase_change(ocpl_id, attributes);
+        }
+        catch (Throwable err) {
+            err.printStackTrace();
+            fail("H5Pget_attr_phase_change: " + err);
+        }
+        assertTrue("testH5Pget_attr_phase_change", ret_val >= 0);
+        assertEquals("Default value of the max. no. of attributes stored in compact storage", 9, attributes[0]);
+        assertEquals("Default value of the min. no. of attributes stored in dense storage", 5, attributes[1]);
     }
 
     @Test

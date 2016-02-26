@@ -3074,6 +3074,21 @@ Java_hdf_hdf5lib_H5_H5Pget_1attr_1phase_1change(JNIEnv *env, jclass clss, jlong 
 
 /*
  * Class:     hdf_hdf5lib_H5
+ * Method:    H5Pset_attr_phase_change
+ * Signature: (JII)V
+ */
+JNIEXPORT void JNICALL
+Java_hdf_hdf5lib_H5_H5Pset_1attr_1phase_1change(JNIEnv *env, jclass clss, jlong ocpl_id, jint max_compact, jint min_dense)
+{
+    herr_t    retVal = -1;
+
+    retVal = H5Pset_attr_phase_change((hid_t)ocpl_id, (unsigned)max_compact, (unsigned)min_dense);
+    if(retVal < 0)
+        h5libraryError(env);
+} /* end Java_hdf_hdf5lib_H5_H5Pset_1attr_1phase_1change */
+
+/*
+ * Class:     hdf_hdf5lib_H5
  * Method:    H5Pget_shared_mesg_phase_change
  * Signature: (J[I)I
  */
