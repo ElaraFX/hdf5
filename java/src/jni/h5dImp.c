@@ -1001,61 +1001,56 @@ Java_hdf_hdf5lib_H5_H5Dread_1string(JNIEnv *env, jclass clss, jlong dataset_id, 
     c_buf = cstr = NULL;
     if (j_buf == NULL) {
         h5nullArgument(env, "H5Dread_string:  buf is NULL");
-        return -1;
     } /* end if */
-
-    n = ENVPTR->GetArrayLength(ENVPAR j_buf);
-    if (n <= 0) {
+    else if ((n = ENVPTR->GetArrayLength(ENVPAR j_buf)) <= 0) {
         h5nullArgument(env, "H5Dread_string:  buf length <= 0");
-        return -1;
-    } /* end if */
-
-    if ((str_len = H5Tget_size((hid_t)mem_type_id)) <=0) {
+    } /* end else if */
+    else if ((str_len = H5Tget_size((hid_t)mem_type_id)) <=0) {
         h5libraryError(env);
-        return -1;
-    } /* end if */
+    } /* end else if */
+    else {
+        if ((cstr = (char*)HDmalloc(str_len + 1)) == NULL) {
+            h5JNIFatalError(env, "H5Dread_string: memory allocation failed.");
+        } /* end if */
+        else {
+            if ((c_buf = (char*)HDmalloc((size_t)n * str_len)) == NULL) {
+                if (cstr)
+                    HDfree(cstr);
+                cstr = NULL;
+                h5JNIFatalError(env, "H5Dread_string: memory allocation failed.");
+            } /* end if */
+            else {
+                status = H5Dread((hid_t)dataset_id, (hid_t)mem_type_id, (hid_t)mem_space_id,
+                                (hid_t)file_space_id, (hid_t)xfer_plist_id, c_buf);
 
-    if ((cstr = (char*)HDmalloc(str_len + 1)) == NULL) {
-        h5JNIFatalError(env, "H5Dread_string: memory allocation failed.");
-        return -1;
-    } /* end if */
+                if (status < 0) {
+                    if (cstr)
+                        HDfree(cstr);
+                    cstr = NULL;
+                    if (c_buf)
+                        HDfree(c_buf);
+                    c_buf = NULL;
+                    h5libraryError(env);
+                } /* end if */
+                else {
+                    pos = 0;
+                    for (i = 0; i < n; i++) {
+                        HDmemcpy(cstr, c_buf+pos, str_len);
+                        cstr[str_len] = '\0';
+                        jstr = ENVPTR->NewStringUTF(ENVPAR cstr);
+                        ENVPTR->SetObjectArrayElement(ENVPAR j_buf, i, jstr);
+                        pos += str_len;
+                    } /* end for */
+                } /* end else */
 
-    if ((c_buf = (char*)HDmalloc((size_t)n * str_len)) == NULL) {
-        if (cstr)
-            HDfree(cstr);
-        cstr = NULL;
-        h5JNIFatalError(env, "H5Dread_string: memory allocation failed.");
-        return -1;
-    } /* end if */
+                if (c_buf)
+                    HDfree(c_buf);
+            } /* end else cbuf allocation*/
 
-    status = H5Dread((hid_t)dataset_id, (hid_t)mem_type_id, (hid_t)mem_space_id,
-                     (hid_t)file_space_id, (hid_t)xfer_plist_id, c_buf);
-
-    if (status < 0) {
-        if (cstr)
-            HDfree(cstr);
-        cstr = NULL;
-        if (c_buf)
-            HDfree(c_buf);
-        c_buf = NULL;
-        h5libraryError(env);
-        return -1;
-    } /* end if */
-
-    pos = 0;
-    for (i=0; i<n; i++) {
-        HDmemcpy(cstr, c_buf+pos, str_len);
-        cstr[str_len] = '\0';
-        jstr = ENVPTR->NewStringUTF(ENVPAR cstr);
-        ENVPTR->SetObjectArrayElement(ENVPAR j_buf, i, jstr);
-        pos += str_len;
-    } /* end for */
-
-    if (c_buf)
-        HDfree(c_buf);
-
-    if (cstr)
-        HDfree(cstr);
+            if (cstr)
+                HDfree(cstr);
+        } /* end else cstr allocation*/
+    } /* end else */
 
     return (jint)status;
 } /* end Java_hdf_hdf5lib_H5_H5Dread_1string */
@@ -1077,51 +1072,48 @@ Java_hdf_hdf5lib_H5_H5Dwrite_1string(JNIEnv *env, jclass clss, jlong dataset_id,
 
     if (j_buf == NULL) {
         h5nullArgument(env, "H5Dwrite_string:  buf is NULL");
-        return -1;
     } /* end if */
-    n = ENVPTR->GetArrayLength(ENVPAR j_buf);
-    if (n <= 0) {
+    else if ((n = ENVPTR->GetArrayLength(ENVPAR j_buf)) <= 0) {
         h5nullArgument(env, "H5Dwrite_string:  buf length <= 0");
-        return -1;
-    } /* end if */
-    if ((str_len = (jsize)H5Tget_size((hid_t)mem_type_id)) <=0) {
+    } /* end else if */
+    else if ((str_len = (jsize)H5Tget_size((hid_t)mem_type_id)) <=0) {
         h5libraryError(env);
-        return -1;
-    } /* end if */
-    if ((c_buf = (char*)HDmalloc((size_t)n * (size_t)str_len)) == NULL) {
-        h5JNIFatalError(env, "H5Dwrite_string: memory allocation failed.");
-        return -1;
-    } /* end if */
-
-    for (i = 0; i < n; i++) {
-        jstring obj = (jstring)ENVPTR->GetObjectArrayElement(ENVPAR (jobjectArray)j_buf, i);
-        if (obj != 0) {
-            jsize length = ENVPTR->GetStringUTFLength(ENVPAR obj);
-            const char *utf8 = ENVPTR->GetStringUTFChars(ENVPAR obj, 0);
-
-            if (utf8) {
-                strncpy(&c_buf[i * str_len], utf8, str_len);
-            } /* end if */
-
-            ENVPTR->ReleaseStringUTFChars(ENVPAR obj, utf8);
-            ENVPTR->DeleteLocalRef(ENVPAR obj);
+    } /* end else if */
+    else {
+        if ((c_buf = (char*)HDmalloc((size_t)n * (size_t)str_len)) == NULL) {
+            h5JNIFatalError(env, "H5Dwrite_string: memory allocation failed.");
         } /* end if */
-    } /* end for */
+        else {
+            for (i = 0; i < n; i++) {
+                jstring obj = (jstring)ENVPTR->GetObjectArrayElement(ENVPAR (jobjectArray)j_buf, i);
+                if (obj != 0) {
+                    jsize length = ENVPTR->GetStringUTFLength(ENVPAR obj);
+                    const char *utf8 = ENVPTR->GetStringUTFChars(ENVPAR obj, 0);
 
-    status = H5Dwrite((hid_t)dataset_id, (hid_t)mem_type_id, (hid_t)mem_space_id,
-                     (hid_t)file_space_id, (hid_t)xfer_plist_id, c_buf);
+                    if (utf8) {
+                        strncpy(&c_buf[i * str_len], utf8, str_len);
+                    } /* end if */
 
-    if (c_buf)
-        HDfree(c_buf);
-    c_buf = NULL;
+                    ENVPTR->ReleaseStringUTFChars(ENVPAR obj, utf8);
+                    ENVPTR->DeleteLocalRef(ENVPAR obj);
+                } /* end if */
+            } /* end for */
 
-    if (status < 0) {
-        h5libraryError(env);
-        return -1;
-    } /* end if */
+            status = H5Dwrite((hid_t)dataset_id, (hid_t)mem_type_id, (hid_t)mem_space_id,
+                            (hid_t)file_space_id, (hid_t)xfer_plist_id, c_buf);
+
+            if (c_buf)
+                HDfree(c_buf);
+            c_buf = NULL;
+
+            if (status < 0) {
+                h5libraryError(env);
+            } /* end if */
+        } /* end else */
+    } /* end else */
 
     return (jint)status;
-} /* end Java_hdf_hdf5lib_H5_H5Dwrited_1string */
+} /* end Java_hdf_hdf5lib_H5_H5Dwrite_1string */
 
 /**
  *  Read VLEN data into array of arrays.
@@ -1132,17 +1124,18 @@ Java_hdf_hdf5lib_H5_H5Dwrite_1string(JNIEnv *env, jclass clss, jlong dataset_id,
 
 /*
  * Class:     hdf_hdf5lib_H5
- * Method:    H5DreadVL
+ * Method:    H5Dread_VLStrings
  * Signature: (JJJJJ[Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL
-Java_hdf_hdf5lib_H5_H5DreadVL(JNIEnv *env, jclass clss, jlong dataset_id, jlong mem_type_id, jlong mem_space_id,
+Java_hdf_hdf5lib_H5_H5Dread_1VLStrings(JNIEnv *env, jclass clss, jlong dataset_id, jlong mem_type_id, jlong mem_space_id,
           jlong file_space_id, jlong xfer_plist_id, jobjectArray buf)
 {
+    herr_t  status = -1;
     htri_t isStr=0, isComplex=0, isVlenStr=0;
 
     if (buf == NULL) {
-        h5nullArgument(env, "H5DreadVL:  buf is NULL");
+        h5nullArgument(env, "H5Dread_VLStrings:  buf is NULL");
     } /* end if */
     else {
         isStr = H5Tdetect_class((hid_t)mem_type_id, H5T_STRING);
@@ -1161,21 +1154,23 @@ Java_hdf_hdf5lib_H5_H5DreadVL(JNIEnv *env, jclass clss, jlong dataset_id, jlong 
             isVlenStr = 1; /* strings created by H5Tvlen_create(H5T_C_S1) */
         } /* end else if */
 
-        if (isStr == 0 || isComplex>0 || isVlenStr) {
-            return (jint) H5DreadVL_array(env, (hid_t)dataset_id, (hid_t)mem_type_id,
+        /* if (isStr == 0 || isComplex>0 || isVlenStr) { */
+        if (isVlenStr) {
+            status = H5DreadVL_array(env, (hid_t)dataset_id, (hid_t)mem_type_id,
                                         (hid_t)mem_space_id, (hid_t)file_space_id,
                                         (hid_t)xfer_plist_id, buf);
         } /* end if */
-
-        if (isStr > 0) {
-            return (jint) H5DreadVL_str(env, (hid_t)dataset_id, (hid_t)mem_type_id,
+        else if (isStr > 0) {
+            status = H5DreadVL_str(env, (hid_t)dataset_id, (hid_t)mem_type_id,
                                         (hid_t)mem_space_id, (hid_t)file_space_id,
                                         (hid_t)xfer_plist_id, buf);
         } /* end if */
+        else
+            h5badArgument(env, "H5Dread_VLStrings: type is not variable length String");
     } /* end else */
 
-    return -1;
-} /* end Java_hdf_hdf5lib_H5_H5DreadVL */
+    return (jint)status;
+} /* end Java_hdf_hdf5lib_H5_H5Dread_1VLStrings */
 
 herr_t
 H5DreadVL_array (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid,
@@ -1207,8 +1202,8 @@ H5DreadVL_array (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid,
         else {
             max_len = 1;
             for (i=0; i<n; i++) {
-                if ((rdata + i)->len > max_len)
-                    max_len = (rdata + i)->len;
+                if (rdata[i].len > max_len)
+                    max_len = rdata[i].len;
             } /* end for */
 
             size = H5Tget_size(tid) * max_len;
@@ -1223,7 +1218,7 @@ H5DreadVL_array (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid,
             else {
                 for (i=0; i<n; i++) {
                     h5str.s[0] = '\0';
-                    h5str_sprintf(&h5str, did, tid, rdata+i, 0);
+                    h5str_sprintf(&h5str, did, tid, &rdata[i], 0);
                     jstr = ENVPTR->NewStringUTF(ENVPAR h5str.s);
                     ENVPTR->SetObjectArrayElement(ENVPAR buf, i, jstr);
                 } /* end for */
@@ -1288,17 +1283,18 @@ H5DreadVL_str (JNIEnv *env, hid_t did, hid_t tid, hid_t mem_sid, hid_t
 
 /*
  * Class:     hdf_hdf5lib_H5
- * Method:    H5DwriteVL
+ * Method:    H5Dwrite_VLStrings
  * Signature: (JJJJJ[Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL
-Java_hdf_hdf5lib_H5_H5DwriteVL(JNIEnv *env, jclass clss, jlong dataset_id, jlong mem_type_id, jlong mem_space_id,
+Java_hdf_hdf5lib_H5_H5Dwrite_1VLStrings(JNIEnv *env, jclass clss, jlong dataset_id, jlong mem_type_id, jlong mem_space_id,
           jlong file_space_id, jlong xfer_plist_id, jobjectArray buf)
 {
+    herr_t  status = -1;
     htri_t isStr=0, isComplex=0, isVlenStr=0;
 
     if (buf == NULL) {
-        h5nullArgument(env, "H5DwriteVL:  buf is NULL");
+        h5nullArgument(env, "H5Dwrite_VLStrings:  buf is NULL");
     } /* end if */
     else {
         isStr = H5Tdetect_class((hid_t)mem_type_id, H5T_STRING);
@@ -1317,21 +1313,23 @@ Java_hdf_hdf5lib_H5_H5DwriteVL(JNIEnv *env, jclass clss, jlong dataset_id, jlong
             isVlenStr = 1; /* strings created by H5Tvlen_create(H5T_C_S1) */
         } /* end else if */
 
-        if (isStr == 0 || isComplex>0 || isVlenStr) {
-            return (jint) H5DwriteVL_array(env, (hid_t)dataset_id, (hid_t)mem_type_id,
+        /*if (isStr == 0 || isComplex>0 || isVlenStr) { */
+        if (isVlenStr) {
+            status = H5DwriteVL_array(env, (hid_t)dataset_id, (hid_t)mem_type_id,
                                         (hid_t)mem_space_id, (hid_t)file_space_id,
                                         (hid_t)xfer_plist_id, buf);
         } /* end if */
-
-        if (isStr > 0) {
-            return (jint) H5DwriteVL_str(env, (hid_t)dataset_id, (hid_t)mem_type_id,
+        else if (isStr > 0) {
+            status = H5DwriteVL_str(env, (hid_t)dataset_id, (hid_t)mem_type_id,
                                         (hid_t)mem_space_id, (hid_t)file_space_id,
                                         (hid_t)xfer_plist_id, buf);
         } /* end if */
+        else
+            h5badArgument(env, "H5Dwrite_VLStrings: type is not variable length String");
     } /* end else */
 
-    return -1;
-} /* end Java_hdf_hdf5lib_H5_H5DreadVL */
+    return (jint)status;
+} /* end Java_hdf_hdf5lib_H5_H5Dwrite_1VLStrings */
 
 // Rosetta Biosoftware
 herr_t
@@ -1374,9 +1372,9 @@ H5DwriteVL_str(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_space
 
         // now free memory
         for (i = 0; i < size; i++) {
-        if(wdata[i]) {
-            HDfree(wdata[i]);
-        } /* end if */
+            if(wdata[i]) {
+                HDfree(wdata[i]);
+            } /* end if */
         } /* end for */
         HDfree(wdata);
 
@@ -1384,7 +1382,7 @@ H5DwriteVL_str(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_space
             h5libraryError(env);
     } /* end else */
 
-    return (jint)status;
+    return status;
 } /* end H5DwriteVL_str */
 
 herr_t
@@ -1413,7 +1411,21 @@ H5DwriteVL_array(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_spa
         else {
             size = H5Tget_size(mem_type_id);
             HDmemset(wdata, 0, (size_t)n * sizeof(hvl_t));
+            for (i = 0; i < n; ++i) {
+                jstring obj = (jstring) ENVPTR->GetObjectArrayElement(ENVPAR (jobjectArray)buf, i);
+                if (obj != 0) {
+                    jsize length = ENVPTR->GetStringUTFLength(ENVPAR obj);
+                    const char *utf8 = ENVPTR->GetStringUTFChars(ENVPAR obj, 0);
 
+                    if (utf8) {
+                        wdata[i].len = length;
+                        wdata[i].p = (void*)utf8;
+                    } /* end if */
+
+                    ENVPTR->ReleaseStringUTFChars(ENVPAR obj, utf8);
+                    ENVPTR->DeleteLocalRef(ENVPAR obj);
+                } /* end if */
+            } /* end for (i = 0; i < n; ++i) */
 
             status = H5Dwrite(dataset_id, mem_type_id, mem_space_id, file_space_id, xfer_plist_id, wdata);
 
@@ -1430,7 +1442,7 @@ H5DwriteVL_array(JNIEnv *env, hid_t dataset_id, hid_t mem_type_id, hid_t mem_spa
         } /* end else */
     } /* end else */
 
-    return (jint)status;
+    return status;
 } /* end H5DwriteVL_array */
 
 /*

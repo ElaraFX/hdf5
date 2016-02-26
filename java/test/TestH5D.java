@@ -813,7 +813,7 @@ public class TestH5D {
 
         try {
             if ((H5did >= 0) && (H5dtid >= 0))
-                H5.H5DwriteVL(H5did, H5dtid,
+                H5.H5Dwrite_VLStrings(H5did, H5dtid,
                         HDF5Constants.H5S_ALL, HDF5Constants.H5S_ALL,
                         HDF5Constants.H5P_DEFAULT, str_data);
         }
@@ -842,7 +842,7 @@ public class TestH5D {
         _createVLDataset(H5fid, H5dsid, "dset", HDF5Constants.H5P_DEFAULT);
 
         try {
-            H5.H5DwriteVL(H5did, H5dtid,
+            H5.H5Dwrite_VLStrings(H5did, H5dtid,
                     HDF5Constants.H5S_ALL, HDF5Constants.H5S_ALL,
                     HDF5Constants.H5P_DEFAULT, str_data);
         }

@@ -1715,7 +1715,7 @@ public class H5 implements java.io.Serializable {
         else if (is1D && (dataClass.getComponentType() == String.class)) {
             log.trace("H5Dread_string type");
             if (H5.H5Tis_variable_str(mem_type_id)) {
-                status = H5DreadVL(dataset_id, mem_type_id, mem_space_id, file_space_id, xfer_plist_id, (Object[]) obj);
+                status = H5Dread_VLStrings(dataset_id, mem_type_id, mem_space_id, file_space_id, xfer_plist_id, (Object[]) obj);
             }
             else {
                 status = H5Dread_string(dataset_id, mem_type_id, mem_space_id, file_space_id, xfer_plist_id,
@@ -1798,7 +1798,7 @@ public class H5 implements java.io.Serializable {
     public synchronized static native int H5Dread_string(long dataset_id, long mem_type_id, long mem_space_id,
             long file_space_id, long xfer_plist_id, String[] buf) throws HDF5LibraryException, NullPointerException;
 
-    public synchronized static native int H5DreadVL(long dataset_id, long mem_type_id, long mem_space_id,
+    public synchronized static native int H5Dread_VLStrings(long dataset_id, long mem_type_id, long mem_space_id,
             long file_space_id, long xfer_plist_id, Object[] buf) throws HDF5LibraryException, NullPointerException;
 
     /**
@@ -1971,7 +1971,7 @@ public class H5 implements java.io.Serializable {
         else if (is1D && (dataClass.getComponentType() == String.class)) {
             log.trace("H5Dwrite_string type");
             if (H5.H5Tis_variable_str(mem_type_id)) {
-                status = H5DwriteVL(dataset_id, mem_type_id, mem_space_id, file_space_id, xfer_plist_id, (Object[]) obj);
+                status = H5Dwrite_VLStrings(dataset_id, mem_type_id, mem_space_id, file_space_id, xfer_plist_id, (Object[]) obj);
             }
             else {
                 status = H5Dwrite_string(dataset_id, mem_type_id, mem_space_id, file_space_id, xfer_plist_id,
@@ -2043,7 +2043,7 @@ public class H5 implements java.io.Serializable {
             long file_space_id, long xfer_plist_id, String[] buf) throws HDF5LibraryException, NullPointerException;
 
     /**
-     * H5DwriteVL writes a (partial) variable length String dataset, specified by its identifier dataset_id, from
+     * H5Dwrite_VLStrings writes a (partial) variable length String dataset, specified by its identifier dataset_id, from
      * the application memory buffer buf into the file.
      *
      * ---- contributed by Rosetta Biosoftware
@@ -2069,7 +2069,7 @@ public class H5 implements java.io.Serializable {
      *                - name is null.
      **/
 
-    public synchronized static native int H5DwriteVL(long dataset_id, long mem_type_id, long mem_space_id,
+    public synchronized static native int H5Dwrite_VLStrings(long dataset_id, long mem_type_id, long mem_space_id,
             long file_space_id, long xfer_plist_id, Object[] buf) throws HDF5LibraryException, NullPointerException;
 
     // /////// unimplemented ////////
