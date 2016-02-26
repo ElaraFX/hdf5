@@ -855,4 +855,38 @@ public class TestH5D {
                      HDF5Constants.H5P_DEFAULT, read_data);
     }
 
+    @Test
+    public void testH5Dvlen_write_read() {
+        String[] str_wdata = { "Parting", "is such", "sweet", "sorrow.",
+                "Testing", "one", "two", "three.",
+                "Dog,", "man's", "best", "friend.",
+                "Diamonds", "are", "a", "girls!",
+                "S A", "T U R", "D A Y", "night",
+                "That's", "all", "folks", "!!!" };
+        String[] str_rdata = new String[DIM_X * DIM_Y];
+
+        _createVLDataset(H5fid, H5dsid, "dset", HDF5Constants.H5P_DEFAULT);
+
+        try {
+            if ((H5did >= 0) && (H5dtid >= 0))
+                H5.H5Dwrite_VLStrings(H5did, H5dtid,
+                        HDF5Constants.H5S_ALL, HDF5Constants.H5S_ALL,
+                        HDF5Constants.H5P_DEFAULT, str_wdata);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if ((H5did >= 0) && (H5dtid >= 0))
+                H5.H5Dread_VLStrings(H5did, H5dtid,
+                        HDF5Constants.H5S_ALL, HDF5Constants.H5S_ALL,
+                        HDF5Constants.H5P_DEFAULT, str_rdata);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        for (int v = 0; v < DIM_X * DIM_Y; v++)
+            assertTrue("testH5Dvlen_write_read " + str_wdata[v] + " == " + str_rdata[v], str_wdata[v] == str_wdata[v]);
+    }
+
 }
