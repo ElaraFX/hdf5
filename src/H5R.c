@@ -1490,7 +1490,7 @@ H5Rget_attr(hid_t loc_id, href_t _ref)
         HGOTO_ERROR(H5E_ARGS, H5E_BADVALUE, FAIL, "invalid reference type")
 
     /* Get the attribute */
-    if((attr = H5R__get_attr(loc.oloc->file, H5AC_ind_dxpl_id, ref)) == NULL)
+    if((attr = H5R__get_attr(loc.oloc->file, H5AC_ind_read_dxpl_id, ref)) == NULL)
         HGOTO_ERROR(H5E_REFERENCE, H5E_CANTCREATE, FAIL, "unable to open attribute")
 
     /* Atomize */
