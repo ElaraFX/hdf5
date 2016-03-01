@@ -10668,8 +10668,11 @@ $as_echo "$JAVA_HOME" >&6; }
 $as_echo "yes" >&6; }
   else
     as_fn_error $? "Java requires shared libraries to be built" "$LINENO" 5
+    HDF_JAVA="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
   fi
-  HDF_JAVA="no"
+else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
