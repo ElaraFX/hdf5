@@ -3164,58 +3164,58 @@ m4trace:configure.ac:837: -1- m4_pattern_allow([^RUNSERIAL$])
 m4trace:configure.ac:838: -1- m4_pattern_allow([^RUNPARALLEL$])
 m4trace:configure.ac:839: -1- m4_pattern_allow([^TESTPARALLEL$])
 m4trace:configure.ac:858: -1- m4_pattern_allow([^H5_CLASSPATH$])
-m4trace:configure.ac:875: -1- AX_JAVA_OPTIONS
-m4trace:configure.ac:875: -1- m4_pattern_allow([^JAVAPREFIX$])
-m4trace:configure.ac:875: -1- m4_pattern_allow([^JAVACFLAGS$])
-m4trace:configure.ac:875: -1- m4_pattern_allow([^JAVAFLAGS$])
-m4trace:configure.ac:875: -1- m4_pattern_allow([^JAVA$])
-m4trace:configure.ac:875: -1- m4_pattern_allow([^JAVAC$])
-m4trace:configure.ac:878: -1- AX_PROG_JAVAC
-m4trace:configure.ac:878: -1- m4_pattern_allow([^JAVAC$])
-m4trace:configure.ac:878: -1- m4_pattern_allow([^JAVAC$])
-m4trace:configure.ac:878: -1- AX_PROG_JAVAC_WORKS
-m4trace:configure.ac:879: -1- AX_PROG_JAVA
-m4trace:configure.ac:879: -1- m4_pattern_allow([^JAVA$])
-m4trace:configure.ac:879: -1- m4_pattern_allow([^JAVA$])
-m4trace:configure.ac:879: -1- AX_PROG_JAVA_WORKS
-m4trace:configure.ac:879: -1- m4_pattern_allow([^UUDECODE$])
+m4trace:configure.ac:876: -1- AX_JAVA_OPTIONS
+m4trace:configure.ac:876: -1- m4_pattern_allow([^JAVAPREFIX$])
+m4trace:configure.ac:876: -1- m4_pattern_allow([^JAVACFLAGS$])
+m4trace:configure.ac:876: -1- m4_pattern_allow([^JAVAFLAGS$])
+m4trace:configure.ac:876: -1- m4_pattern_allow([^JAVA$])
+m4trace:configure.ac:876: -1- m4_pattern_allow([^JAVAC$])
 m4trace:configure.ac:879: -1- AX_PROG_JAVAC
 m4trace:configure.ac:879: -1- m4_pattern_allow([^JAVAC$])
 m4trace:configure.ac:879: -1- m4_pattern_allow([^JAVAC$])
 m4trace:configure.ac:879: -1- AX_PROG_JAVAC_WORKS
-m4trace:configure.ac:880: -1- AX_PROG_JAR
-m4trace:configure.ac:880: -1- m4_pattern_allow([^JAR$])
-m4trace:configure.ac:880: -1- m4_pattern_allow([^JAR$])
-m4trace:configure.ac:881: -1- AX_PROG_JAVADOC
-m4trace:configure.ac:881: -1- m4_pattern_allow([^JAVADOC$])
-m4trace:configure.ac:881: -1- m4_pattern_allow([^JAVADOC$])
-m4trace:configure.ac:883: -1- AX_JNI_INCLUDE_DIR([])
-m4trace:configure.ac:883: -1- m4_pattern_allow([^_ACJNI_JAVAC$])
-m4trace:configure.ac:883: -1- _ACJNI_FOLLOW_SYMLINKS(["$_ACJNI_JAVAC"])
-m4trace:configure.ac:883: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [autoconf/general.m4:2791: AC_CHECK_FILE is expanded from...
+m4trace:configure.ac:880: -1- AX_PROG_JAVA
+m4trace:configure.ac:880: -1- m4_pattern_allow([^JAVA$])
+m4trace:configure.ac:880: -1- m4_pattern_allow([^JAVA$])
+m4trace:configure.ac:880: -1- AX_PROG_JAVA_WORKS
+m4trace:configure.ac:880: -1- m4_pattern_allow([^UUDECODE$])
+m4trace:configure.ac:880: -1- AX_PROG_JAVAC
+m4trace:configure.ac:880: -1- m4_pattern_allow([^JAVAC$])
+m4trace:configure.ac:880: -1- m4_pattern_allow([^JAVAC$])
+m4trace:configure.ac:880: -1- AX_PROG_JAVAC_WORKS
+m4trace:configure.ac:881: -1- AX_PROG_JAR
+m4trace:configure.ac:881: -1- m4_pattern_allow([^JAR$])
+m4trace:configure.ac:881: -1- m4_pattern_allow([^JAR$])
+m4trace:configure.ac:882: -1- AX_PROG_JAVADOC
+m4trace:configure.ac:882: -1- m4_pattern_allow([^JAVADOC$])
+m4trace:configure.ac:882: -1- m4_pattern_allow([^JAVADOC$])
+m4trace:configure.ac:884: -1- AX_JNI_INCLUDE_DIR([])
+m4trace:configure.ac:884: -1- m4_pattern_allow([^_ACJNI_JAVAC$])
+m4trace:configure.ac:884: -1- _ACJNI_FOLLOW_SYMLINKS(["$_ACJNI_JAVAC"])
+m4trace:configure.ac:884: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [autoconf/general.m4:2791: AC_CHECK_FILE is expanded from...
 m4/ax_jni_include_dir.m4:112: AX_JNI_INCLUDE_DIR is expanded from...
-configure.ac:883: the top level])
-m4trace:configure.ac:883: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [autoconf/general.m4:2791: AC_CHECK_FILE is expanded from...
+configure.ac:884: the top level])
+m4trace:configure.ac:884: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [autoconf/general.m4:2791: AC_CHECK_FILE is expanded from...
 ../../lib/m4sugar/m4sh.m4:643: AS_IF is expanded from...
 autoconf/general.m4:2791: AC_CHECK_FILE is expanded from...
 m4/ax_jni_include_dir.m4:112: AX_JNI_INCLUDE_DIR is expanded from...
-configure.ac:883: the top level])
-m4trace:configure.ac:889: -1- AX_CHECK_CLASSPATH([])
-m4trace:configure.ac:891: -1- AX_CHECK_JUNIT([])
-m4trace:configure.ac:891: -1- AC_CHECK_CLASS([junit.textui.TestRunner])
-m4trace:configure.ac:891: -1- _m4_warn([obsolete], [The macro `AC_CHECK_CLASS' is obsolete.
+configure.ac:884: the top level])
+m4trace:configure.ac:890: -1- AX_CHECK_CLASSPATH([])
+m4trace:configure.ac:892: -1- AX_CHECK_JUNIT([])
+m4trace:configure.ac:892: -1- AC_CHECK_CLASS([junit.textui.TestRunner])
+m4trace:configure.ac:892: -1- _m4_warn([obsolete], [The macro `AC_CHECK_CLASS' is obsolete.
 You should run autoupdate.], [m4/ax_check_class.m4:56: AC_CHECK_CLASS is expanded from...
 ../../lib/m4sugar/m4sh.m4:643: AS_IF is expanded from...
 autoconf/general.m4:2046: AC_CACHE_VAL is expanded from...
 m4/ax_check_junit.m4:70: AX_CHECK_JUNIT is expanded from...
-configure.ac:891: the top level])
-m4trace:configure.ac:891: -1- AX_CHECK_CLASS([junit.textui.TestRunner])
-m4trace:configure.ac:891: -1- AX_TRY_COMPILE_JAVA([junit.textui.TestRunner], [], [eval "ac_cv_class_$ac_var_name=yes"], [eval "ac_cv_class_$ac_var_name=no"])
-m4trace:configure.ac:891: -1- m4_pattern_allow([^JUNIT$])
-m4trace:configure.ac:891: -1- m4_pattern_allow([^JAVA_JUNIT$])
-m4trace:configure.ac:891: -1- m4_pattern_allow([^TESTS_JUNIT$])
-m4trace:configure.ac:892: -1- AX_CHECK_JAVA_HOME
-m4trace:configure.ac:892: -1- m4_pattern_allow([^JAVA_PATH_NAME$])
+configure.ac:892: the top level])
+m4trace:configure.ac:892: -1- AX_CHECK_CLASS([junit.textui.TestRunner])
+m4trace:configure.ac:892: -1- AX_TRY_COMPILE_JAVA([junit.textui.TestRunner], [], [eval "ac_cv_class_$ac_var_name=yes"], [eval "ac_cv_class_$ac_var_name=no"])
+m4trace:configure.ac:892: -1- m4_pattern_allow([^JUNIT$])
+m4trace:configure.ac:892: -1- m4_pattern_allow([^JAVA_JUNIT$])
+m4trace:configure.ac:892: -1- m4_pattern_allow([^TESTS_JUNIT$])
+m4trace:configure.ac:893: -1- AX_CHECK_JAVA_HOME
+m4trace:configure.ac:893: -1- m4_pattern_allow([^JAVA_PATH_NAME$])
 m4trace:configure.ac:907: -1- m4_pattern_allow([^H5_FORTRAN_SHARED$])
 m4trace:configure.ac:942: -1- AM_CONDITIONAL([FORTRAN_SHARED_CONDITIONAL], [test "X$H5_FORTRAN_SHARED" = "Xyes"])
 m4trace:configure.ac:942: -1- m4_pattern_allow([^FORTRAN_SHARED_CONDITIONAL_TRUE$])

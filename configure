@@ -4029,13 +4029,13 @@ fi
 ## turning on debug or profiling flags for the compiler.  The search order
 ## is:
 ##
-##	CPU-VENDOR-OS
-##	VENDOR-OS
-##	CPU-OS
-##	CPU-VENDOR
-##	OS
-##	VENDOR
-##	CPU
+##    CPU-VENDOR-OS
+##    VENDOR-OS
+##    CPU-OS
+##    CPU-VENDOR
+##    OS
+##    VENDOR
+##    CPU
 ##
 ## If the `OS' ends with a version number then remove it. For instance,
 ## `freebsd3.1' would become `freebsd'
@@ -9165,7 +9165,7 @@ ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
-	## this is checked for when AC_HEADER_STDC is done
+    ## this is checked for when AC_HEADER_STDC is done
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if c++ interface enabled" >&5
 $as_echo_n "checking if c++ interface enabled... " >&6; }
@@ -9553,36 +9553,36 @@ fi
 ## The following variables are used to distinguish between building a
 ## serial and parallel library.
 ##
-##    HAVE_PARALLEL	-- defined in H5config.h if we are building
-##			   a parallel library even if configure wasn't
-##			   able to find some header file or library that
-##			   might be required. This is defined if the
-##			   user explicitly states
-##			   that a parallel library is being built by supplying
-##			   the `--enable-parallel' configure switch.
+##    HAVE_PARALLEL    -- defined in H5config.h if we are building
+##               a parallel library even if configure wasn't
+##               able to find some header file or library that
+##               might be required. This is defined if the
+##               user explicitly states
+##               that a parallel library is being built by supplying
+##               the `--enable-parallel' configure switch.
 ##
-##    PARALLEL		-- This variable is set to a non-null value if
-##			   we're building a parallel version of the library.
+##    PARALLEL        -- This variable is set to a non-null value if
+##               we're building a parallel version of the library.
 ##
-##    RUNSERIAL	        -- This is a command which will be prepended to
-##			   the executable name to run the executable using
-##			   a single process. For serial versions of the
-##			   library this will normally be empty. For parallel
-##			   versions it might be something like `mpiexec -n 1'.
-##			   The value of this variable is substituted in *.in
-##			   files.
+##    RUNSERIAL            -- This is a command which will be prepended to
+##               the executable name to run the executable using
+##               a single process. For serial versions of the
+##               library this will normally be empty. For parallel
+##               versions it might be something like `mpiexec -n 1'.
+##               The value of this variable is substituted in *.in
+##               files.
 ##
-##    RUNPARALLEL	-- This is a command which will be prepended to
-##			   the executable name to run the executable on
-##			   multiple processors. For the serial library the
-##			   value will normally be the empty string. For
-##			   parallel library it should be something like
-##			   "mpiexec -n \$\${NPROCS:=6}" where NPROCS will
-##			   eventually contain the number of processors on which
-##			   to run the executable (the double dollarsigns are to
-##			   protect the expansion until make executes the
-##			   command).  The value of this variable is
-##			   substituted in *.in files.
+##    RUNPARALLEL    -- This is a command which will be prepended to
+##               the executable name to run the executable on
+##               multiple processors. For the serial library the
+##               value will normally be the empty string. For
+##               parallel library it should be something like
+##               "mpiexec -n \$\${NPROCS:=6}" where NPROCS will
+##               eventually contain the number of processors on which
+##               to run the executable (the double dollarsigns are to
+##               protect the expansion until make executes the
+##               command).  The value of this variable is
+##               substituted in *.in files.
 ##
 
 
@@ -9618,14 +9618,15 @@ else
 fi
 
 
-if test "X$HDF_JAVA" = "Xyes" && test "X${enable_shared}" != "Xno"; then
-  echo "yes"
-  if test "X$CLASSPATH" = "X"; then
-    H5_CLASSPATH=".:$srcdir/java/lib"
-  else
-    H5_CLASSPATH=".:$CLASSPATH:$srcdir/java/lib"
-  fi
-## Checks for programs.
+if test "X$HDF_JAVA" = "Xyes"; then
+  if test "X${enable_shared}" != "Xno"; then
+    echo "yes"
+    if test "X$CLASSPATH" = "X"; then
+      H5_CLASSPATH=".:$srcdir/java/lib"
+    else
+      H5_CLASSPATH=".:$CLASSPATH:$srcdir/java/lib"
+    fi
+    ## Checks for programs.
 
 
 # Check whether --with-java-prefix was given.
@@ -9649,8 +9650,8 @@ JAVAPREFIX=$with_java_prefix
 JAVACFLAGS=$with_javac_flags
 JAVAFLAGS=$with_java_flags
 
-  H5_JAVACFLAGS=$JAVACFLAGS
-  H5_JAVAFLAGS=$JAVAFLAGS
+    H5_JAVACFLAGS=$JAVACFLAGS
+    H5_JAVAFLAGS=$JAVAFLAGS
 
 if test "x$JAVAPREFIX" = x; then :
   test "x$JAVAC" = x && for ac_prog in "gcj -C" guavac jikes javac
@@ -9750,7 +9751,7 @@ else
 JAVA_TEST=Test.java
 CLASS_TEST=Test.class
 cat << \EOF > $JAVA_TEST
-/* #line 9753 "configure" */
+/* #line 9754 "configure" */
 public class Test {
 }
 EOF
@@ -9925,7 +9926,7 @@ EOF
 if $UUDECODE Test.uue; then
         ac_cv_prog_uudecode_base64=yes
 else
-        echo "configure: 9928: uudecode had trouble decoding base 64 file 'Test.uue'" >&5
+        echo "configure: 9929: uudecode had trouble decoding base 64 file 'Test.uue'" >&5
         echo "configure: failed file was:" >&5
         cat Test.uue >&5
         ac_cv_prog_uudecode_base64=no
@@ -10042,7 +10043,7 @@ else
 JAVA_TEST=Test.java
 CLASS_TEST=Test.class
 cat << \EOF > $JAVA_TEST
-/* #line 10045 "configure" */
+/* #line 10046 "configure" */
 public class Test {
 }
 EOF
@@ -10077,7 +10078,7 @@ JAVA_TEST=Test.java
 CLASS_TEST=Test.class
 TEST=Test
 cat << \EOF > $JAVA_TEST
-/* [#]line 10080 "configure" */
+/* [#]line 10081 "configure" */
 public class Test {
 public static void main (String args[]) {
         System.exit (0);
@@ -10297,7 +10298,7 @@ done
 fi
 test "x$JAVADOC" = x && as_fn_error $? "no acceptable javadoc generator found in \$PATH" "$LINENO" 5
 
-  ## Find the include directories needed for building JNI code
+    ## Find the include directories needed for building JNI code
 
 
 JNI_INCLUDE_DIRS=""
@@ -10457,11 +10458,11 @@ do
     fi
 done
 
-  for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
-  do
-    JNIFLAGS="$JNIFLAGS -I$JNI_INCLUDE_DIR"
-  done
-  ## Find junit for testing the JNI code
+    for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
+    do
+      JNIFLAGS="$JNIFLAGS -I$JNI_INCLUDE_DIR"
+    done
+    ## Find junit for testing the JNI code
 
 if test "x$CLASSPATH" = x; then
         echo "You have no CLASSPATH, I hope it is good"
@@ -10469,7 +10470,7 @@ else
         echo "You have CLASSPATH $CLASSPATH, hope it is correct"
 fi
 
-  CLASSPATH_ENV=$H5_CLASSPATH
+    CLASSPATH_ENV=$H5_CLASSPATH
 
 if ${ac_cv_prog_JUNIT+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -10507,7 +10508,7 @@ EOF
                 if $UUDECODE Test.uue; then
                         :
                 else
-                        echo "configure: 10510: uudecode had trouble decoding base 64 file 'Test.uue'" >&5
+                        echo "configure: 10511: uudecode had trouble decoding base 64 file 'Test.uue'" >&5
                         echo "configure: failed file was:" >&5
                         cat Test.uue >&5
                         ac_cv_prog_uudecode_base64=no
@@ -10527,7 +10528,7 @@ EOF
 else
 
 cat << \EOF > Test.java
-/* #line 10530 "configure" */
+/* #line 10531 "configure" */
 import junit.textui.TestRunner;
 public class Test {
 
@@ -10585,7 +10586,7 @@ $as_echo "$JAVA_JUNIT" >&6; }
 
 
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for JAVA_HOME" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for JAVA_HOME" >&5
 $as_echo_n "checking for JAVA_HOME... " >&6; }
 # We used a fake loop so that we can use "break" to exit when the result
 # is found.
@@ -10658,10 +10659,9 @@ done
 $as_echo "$JAVA_HOME" >&6; }
 
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-else
-  if test "X${enable_shared}" = "Xno"; then
+  else
     as_fn_error $? "Java requires shared libraries to be built" "$LINENO" 5
   fi
   HDF_JAVA="no"
@@ -29575,7 +29575,7 @@ int
 main ()
 {
  MPI_Init(0, (void *)0);
-		      MPI_File_open(0, (void *)0, 0, 0, (void *)0);
+            MPI_File_open(0, (void *)0, 0, 0, (void *)0);
   ;
   return 0;
 }
@@ -29586,7 +29586,7 @@ $as_echo "yes" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-		    as_fn_error $? "unable to link a simple MPI-IO C program" "$LINENO" 5
+            as_fn_error $? "unable to link a simple MPI-IO C program" "$LINENO" 5
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
