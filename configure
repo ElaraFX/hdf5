@@ -735,6 +735,7 @@ JAVAFLAGS
 JAVACFLAGS
 JAVAPREFIX
 H5_CLASSPATH
+HDF_JAVA
 TESTPARALLEL
 RUNPARALLEL
 RUNSERIAL
@@ -9606,6 +9607,12 @@ esac
 ## Check if they would like the Java native interface (JNI) compiled
 ##
 
+## This needs to be exposed for the library info file even if JAVA is disabled.
+
+
+## Default is no JAVA
+HDF_JAVA=no
+
  H5_CLASSPATH=""
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if Java JNI interface enabled" >&5
 $as_echo_n "checking if Java JNI interface enabled... " >&6; }
@@ -9613,8 +9620,6 @@ $as_echo_n "checking if Java JNI interface enabled... " >&6; }
 # Check whether --enable-java was given.
 if test "${enable_java+set}" = set; then :
   enableval=$enable_java; HDF_JAVA=$enableval
-else
-  HDF_JAVA=no
 fi
 
 
@@ -9751,7 +9756,7 @@ else
 JAVA_TEST=Test.java
 CLASS_TEST=Test.class
 cat << \EOF > $JAVA_TEST
-/* #line 9754 "configure" */
+/* #line 9759 "configure" */
 public class Test {
 }
 EOF
@@ -9926,7 +9931,7 @@ EOF
 if $UUDECODE Test.uue; then
         ac_cv_prog_uudecode_base64=yes
 else
-        echo "configure: 9929: uudecode had trouble decoding base 64 file 'Test.uue'" >&5
+        echo "configure: 9934: uudecode had trouble decoding base 64 file 'Test.uue'" >&5
         echo "configure: failed file was:" >&5
         cat Test.uue >&5
         ac_cv_prog_uudecode_base64=no
@@ -10043,7 +10048,7 @@ else
 JAVA_TEST=Test.java
 CLASS_TEST=Test.class
 cat << \EOF > $JAVA_TEST
-/* #line 10046 "configure" */
+/* #line 10051 "configure" */
 public class Test {
 }
 EOF
@@ -10078,7 +10083,7 @@ JAVA_TEST=Test.java
 CLASS_TEST=Test.class
 TEST=Test
 cat << \EOF > $JAVA_TEST
-/* [#]line 10081 "configure" */
+/* [#]line 10086 "configure" */
 public class Test {
 public static void main (String args[]) {
         System.exit (0);
@@ -10508,7 +10513,7 @@ EOF
                 if $UUDECODE Test.uue; then
                         :
                 else
-                        echo "configure: 10511: uudecode had trouble decoding base 64 file 'Test.uue'" >&5
+                        echo "configure: 10516: uudecode had trouble decoding base 64 file 'Test.uue'" >&5
                         echo "configure: failed file was:" >&5
                         cat Test.uue >&5
                         ac_cv_prog_uudecode_base64=no
@@ -10528,7 +10533,7 @@ EOF
 else
 
 cat << \EOF > Test.java
-/* #line 10531 "configure" */
+/* #line 10536 "configure" */
 import junit.textui.TestRunner;
 public class Test {
 
