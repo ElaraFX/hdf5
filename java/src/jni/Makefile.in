@@ -736,8 +736,8 @@ CHECK_CLEANFILES = *.chkexe *.chklog *.clog *.clog2
 # After making changes, run bin/reconfigure to update other configure related
 # files like Makefile.in.
 LT_VERS_INTERFACE = 6
-LT_VERS_REVISION = 223
 LT_VERS_AGE = 0
+LT_VERS_REVISION = 224
 
 # Mark this directory as part of the JNI API
 JAVA_API = yes
