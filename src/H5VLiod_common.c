@@ -1385,7 +1385,6 @@ EFF__mercury_register_callbacks(void)
     H5VL_VIEW_CREATE_ID = MERCURY_REGISTER("view_create", view_create_in_t, view_create_out_t,
                                            H5VL_iod_server_view_create);
 
-#ifdef H5_HAVE_INDEXING
     H5VL_DSET_SET_INDEX_INFO_ID = MERCURY_REGISTER("dset_set_index_info",
                                                    dset_set_index_info_in_t, ret_t,
                                                    H5VL_iod_server_dset_set_index_info);
@@ -1396,7 +1395,6 @@ EFF__mercury_register_callbacks(void)
     H5VL_DSET_RM_INDEX_INFO_ID = MERCURY_REGISTER("dset_rm_index_info",
                                                   dset_rm_index_info_in_t, ret_t,
                                                   H5VL_iod_server_dset_remove_index_info);
-#endif
 
     H5VL_CANCEL_OP_ID = MERCURY_REGISTER("cancel_op", uint64_t, uint8_t,
                                          H5VL_iod_server_cancel_op);

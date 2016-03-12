@@ -702,7 +702,6 @@ H5VL_iod_request_complete(H5VL_iod_file_t *file, H5VL_iod_request_t *req)
 
             H5VL_iod_request_delete(file, req);
 
-#ifdef H5_HAVE_INDEXING
             /* check whether index needs to be updated or not */
             if (info->idx_handle) {
                 H5X_class_t *idx_class = NULL;
@@ -737,7 +736,7 @@ H5VL_iod_request_complete(H5VL_iod_file_t *file, H5VL_iod_request_t *req)
                         HGOTO_ERROR(H5E_INDEX, H5E_CANTSET, FAIL, "cannot set index info to dataset");
                 }
             }
-#endif
+
             if(info->vl_lengths) {
                 free(info->vl_lengths);
                 info->vl_lengths = NULL;
@@ -782,7 +781,6 @@ H5VL_iod_request_complete(H5VL_iod_file_t *file, H5VL_iod_request_t *req)
 
             H5VL_iod_request_delete(file, req);
 
-#ifdef H5_HAVE_INDEXING
             /* check whether index needs to be updated or not */
             if (info->idx_handle) {
                 H5X_class_t *idx_class = NULL;
@@ -817,7 +815,7 @@ H5VL_iod_request_complete(H5VL_iod_file_t *file, H5VL_iod_request_t *req)
                         HGOTO_ERROR(H5E_INDEX, H5E_CANTSET, FAIL, "cannot set index info to dataset");
                 } /* end if */
             } /* end if */
-#endif
+
             for(i = 0; i < info->count; i++) {
                 if(info->list[i].vl_lengths) {
                     free(info->list[i].vl_lengths);
@@ -1849,7 +1847,6 @@ H5VL_iod_request_complete(H5VL_iod_file_t *file, H5VL_iod_request_t *req)
             H5VL_iod_request_delete(file, req);
             break;
         }
-#ifdef H5_HAVE_INDEXING
     case HG_DSET_SET_INDEX_INFO:
         {
             int *status = (int *)req->data;
@@ -1953,7 +1950,6 @@ H5VL_iod_request_complete(H5VL_iod_file_t *file, H5VL_iod_request_t *req)
             H5VL_iod_request_delete(file, req);
             break;
         }
-#endif /* H5_HAVE_INDEXING */
         //case HG_LINK_ITERATE:
         //case HG_MAP_ITERATE:
     default:
@@ -2402,10 +2398,8 @@ H5VL_iod_request_cancel(H5VL_iod_file_t *file, H5VL_iod_request_t *req)
     case HG_TR_SKIP:
     case HG_TR_ABORT:
     case HG_EVICT:
-#ifdef H5_HAVE_INDEXING
     case HG_DSET_SET_INDEX_INFO:
     case HG_DSET_RM_INDEX_INFO:
-#endif /* H5_HAVE_INDEXING */
         {
             int *status = (int *)req->data;
 
@@ -2414,7 +2408,6 @@ H5VL_iod_request_cancel(H5VL_iod_file_t *file, H5VL_iod_request_t *req)
             H5VL_iod_request_delete(file, req);
             break;
         }
-#ifdef H5_HAVE_INDEXING
     case HG_DSET_GET_INDEX_INFO:
         {
             H5VL_iod_dataset_get_index_info_t *idx_info =
@@ -2427,7 +2420,6 @@ H5VL_iod_request_cancel(H5VL_iod_file_t *file, H5VL_iod_request_t *req)
             H5VL_iod_request_delete(file, req);
             break;
         }
-#endif /* H5_HAVE_INDEXING */
     case HG_PREFETCH:
     case HG_VIEW_CREATE:
         req->data = NULL;
